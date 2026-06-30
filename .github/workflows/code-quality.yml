@@ -13,7 +13,7 @@ concurrency:
 
 jobs:
   quality:
-    name: Lint, format & build
+    name: Lint, format, typecheck & build
     runs-on: ubuntu-latest
 
     steps:
@@ -34,6 +34,9 @@ jobs:
 
       - name: Check formatting
         run: npm run format:check
+
+      - name: Typecheck
+        run: npm run check
 
       - name: Build
         run: npm run build

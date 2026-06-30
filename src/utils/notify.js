@@ -1,6 +1,7 @@
 import iziToast from 'izitoast';
 import 'izitoast/dist/css/iziToast.min.css';
 
+/** @type {import('izitoast').IziToastSettings} */
 const BASE = { position: 'topRight', timeout: 4000 };
 
 /** @param {string} message */

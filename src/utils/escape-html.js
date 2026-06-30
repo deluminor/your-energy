@@ -1,3 +1,4 @@
+/** @type {Record<string, string>} */
 const ESCAPE_MAP = {
   '&': '&amp;',
   '<': '&lt;',

@@ -2,28 +2,31 @@
  * @typedef {import('./constants.js').API_EVENT[keyof typeof import('./constants.js').API_EVENT]} ApiEventType
  */
 
-/** @type {Map<ApiEventType, Set<(...args: never[]) => void>>} */
+/** @type {Map<ApiEventType, Set<(...args: unknown[]) => void>>} */
 const listeners = new Map();
 
 /**
  * Subscribes to API-layer UI events (loader, notifications).
  * @param {ApiEventType} type
- * @param {(...args: never[]) => void} handler
+ * @param {(...args: unknown[]) => void} handler
  * @returns {() => void}
  */
 export function onApiEvent(type, handler) {
-  if (!listeners.has(type)) {
-    listeners.set(type, new Set());
+  let set = listeners.get(type);
+
+  if (!set) {
+    set = new Set();
+    listeners.set(type, set);
   }
 
-  listeners.get(type).add(handler);
+  set.add(handler);
 
   return () => listeners.get(type)?.delete(handler);
 }
 
 /**
  * @param {ApiEventType} type
- * @param {...never[]} args
+ * @param {...unknown} args
  */
 export function emitApiEvent(type, ...args) {
   listeners.get(type)?.forEach((handler) => handler(...args));

@@ -9,7 +9,13 @@ export function connectApiUi() {
   if (connected) return;
   connected = true;
 
-  onApiEvent(API_EVENT.LOADER_SHOW, showLoader);
-  onApiEvent(API_EVENT.LOADER_HIDE, hideLoader);
-  onApiEvent(API_EVENT.NOTIFY_ERROR, notifyError);
+  onApiEvent(API_EVENT.LOADER_SHOW, (mode) =>
+    showLoader(/** @type {string | undefined} */ (mode)),
+  );
+  onApiEvent(API_EVENT.LOADER_HIDE, (mode) =>
+    hideLoader(/** @type {string | undefined} */ (mode)),
+  );
+  onApiEvent(API_EVENT.NOTIFY_ERROR, (message) =>
+    notifyError(/** @type {string} */ (message)),
+  );
 }

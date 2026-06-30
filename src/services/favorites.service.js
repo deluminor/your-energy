@@ -1,9 +1,11 @@
 import { STORAGE_KEYS } from '../utils/constants.js';
 import { readJSON, writeJSON } from './storage.service.js';
 
-/** @returns {object[]} */
+/** @typedef {import('../types/exercise').Exercise} Exercise */
+
+/** @returns {Exercise[]} */
 export function getFavorites() {
-  return readJSON(STORAGE_KEYS.FAVORITES, []);
+  return readJSON(STORAGE_KEYS.FAVORITES, /** @type {Exercise[]} */ ([]));
 }
 
 /**
@@ -14,7 +16,7 @@ export function isFavorite(id) {
   return getFavorites().some((item) => item._id === id);
 }
 
-/** @param {object} exercise */
+/** @param {Exercise} exercise */
 export function addFavorite(exercise) {
   const list = getFavorites();
 
@@ -33,7 +35,7 @@ export function removeFavorite(id) {
 
 /**
  * Toggles favorite state and returns the resulting state.
- * @param {object} exercise
+ * @param {Exercise} exercise
  * @returns {boolean} true if now favorite
  */
 export function toggleFavorite(exercise) {

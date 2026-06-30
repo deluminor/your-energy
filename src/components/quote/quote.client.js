@@ -18,7 +18,12 @@ function todayKey() {
  * @returns {{ author: string, quote: string } | null}
  */
 function readCachedQuote() {
-  const cached = readJSON(STORAGE_KEYS.QUOTE, null);
+  const cached = readJSON(
+    STORAGE_KEYS.QUOTE,
+    /** @type {{ author: string, quote: string, date: string } | null} */ (
+      null
+    ),
+  );
 
   if (cached && cached.date === todayKey()) {
     return { author: cached.author, quote: cached.quote };

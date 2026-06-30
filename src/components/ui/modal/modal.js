@@ -2,6 +2,7 @@ const ROOT_ID = 'modal-root';
 const FOCUSABLE_SELECTOR =
   'a[href], button:not([disabled]), textarea, input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
+/** @type {null | (() => void)} */
 let activeClose = null;
 
 /**
@@ -24,8 +25,8 @@ let activeClose = null;
  * @param {() => void} [options.onClose] - callback fired after the modal closes
  * @returns {() => void} close function
  */
-export function openModal({ name, label, content = '', onClose } = {}) {
-  const root = document.getElementById(ROOT_ID);
+export function openModal({ name, label, content = '', onClose }) {
+  const root = /** @type {HTMLElement} */ (document.getElementById(ROOT_ID));
   if (!root) return () => {};
 
   const previouslyFocused = document.activeElement;
@@ -40,7 +41,9 @@ export function openModal({ name, label, content = '', onClose } = {}) {
       </div>
     </div>`;
 
-  const dialog = root.querySelector('.modal__dialog');
+  const dialog = /** @type {HTMLElement} */ (
+    root.querySelector('.modal__dialog')
+  );
   if (label) dialog.setAttribute('aria-label', label);
 
   const previousOverflow = document.body.style.overflow;
@@ -48,11 +51,13 @@ export function openModal({ name, label, content = '', onClose } = {}) {
 
   /** @returns {HTMLElement[]} visible, tabbable elements inside the dialog */
   function getFocusable() {
-    return Array.from(dialog.querySelectorAll(FOCUSABLE_SELECTOR)).filter(
-      (el) => el.offsetParent !== null,
+    const nodes = /** @type {NodeListOf<HTMLElement>} */ (
+      dialog.querySelectorAll(FOCUSABLE_SELECTOR)
     );
+    return Array.from(nodes).filter((el) => el.offsetParent !== null);
   }
 
+  /** @param {KeyboardEvent} event */
   function trapFocus(event) {
     const items = getFocusable();
 
@@ -75,6 +80,7 @@ export function openModal({ name, label, content = '', onClose } = {}) {
     }
   }
 
+  /** @param {KeyboardEvent} event */
   function onKeydown(event) {
     if (event.key === 'Escape') {
       close();

@@ -3,5 +3,6 @@
  * @returns {string}
  */
 export function renderRatingStars(rating = 0) {
-  return `<span class="rating-stars" data-rating="${rating}">★★★★★</span>`;
+  const safeRating = Number.isFinite(Number(rating)) ? Number(rating) : 0;
+  return `<span class="rating-stars" data-rating="${safeRating}">★★★★★</span>`;
 }

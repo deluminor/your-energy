@@ -1,9 +1,11 @@
+import { escapeHtml } from '../../../utils/escape-html.js';
+
 /**
  * @param {{ label?: string, type?: string }} [props]
  * @returns {string}
  */
 export function renderButton({ label = 'Button', type = 'button' } = {}) {
-  return `<button class="button" type="${type}">${label}</button>`;
+  return `<button class="button" type="${escapeHtml(type)}">${escapeHtml(label)}</button>`;
 }
 
 /**

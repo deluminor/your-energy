@@ -44,6 +44,22 @@ export function setState(patch) {
  * Subscribes to state changes. Returns an unsubscribe fn —
  * ALWAYS call it when tearing down a component (e.g. closing a modal)
  * to avoid leaking listeners.
+ *
+ * Island teardown contract — every island that subscribes MUST capture the
+ * returned fn and call it on teardown. Recommended shape for feature islands:
+ *
+ * ```js
+ * export function initFilters(root) {
+ *   if (!root) return () => {};
+ *   const stop = subscribe((state) => render(root, state));
+ *   // ...wire DOM listeners...
+ *   return () => { stop(); }; // also remove any DOM listeners here
+ * }
+ * ```
+ *
+ * The island's `.astro` `<script>` invokes the returned teardown on
+ * `astro:before-swap` once client navigation is enabled.
+ *
  * @param {(state: Readonly<AppState>) => void} listener
  * @returns {() => void}
  */

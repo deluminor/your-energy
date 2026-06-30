@@ -4,9 +4,15 @@
  * store (services/store) to drive a reload. Hidden when there is a single page.
  * See `quote/quote.client.js` for the reference pattern.
  *
+ * Teardown contract: capture the `subscribe()` unsubscribe fn and return a
+ * teardown that calls it (see `services/store.service.js`) so store listeners
+ * do not accumulate across re-init.
+ *
  * @param {HTMLElement | null} root
- * @returns {void}
+ * @returns {() => void} teardown
  */
 export function initPagination(root) {
-  if (!root) return;
+  if (!root) return () => {};
+
+  return () => {};
 }
