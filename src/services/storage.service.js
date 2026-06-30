@@ -25,8 +25,3 @@ export function writeJSON(key, value) {
     console.error(`storage: failed to write "${key}"`, error);
   }
 }
-
-/** @param {string} key */
-export function remove(key) {
-  localStorage.removeItem(key);
-}
