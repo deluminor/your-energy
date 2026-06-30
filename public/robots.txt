@@ -1,2 +1,4 @@
 User-agent: *
 Allow: /
+
+Sitemap: https://deluminor.github.io/your-energy/sitemap-index.xml
