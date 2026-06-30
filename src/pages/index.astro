@@ -1,0 +1,71 @@
+---
+import CategoryList from '../components/category-card/CategoryList.astro';
+import DailyNorm from '../components/daily-norm/DailyNorm.astro';
+import Filters from '../components/filters/Filters.astro';
+import Hero from '../components/hero/Hero.astro';
+import Pagination from '../components/pagination/Pagination.astro';
+import Quote from '../components/quote/Quote.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const title = 'Your Energy';
+const description =
+  'Your Energy — catalog of fitness exercises with filters, favorites and daily motivation.';
+---
+
+<BaseLayout title={title} description={description}>
+  <main>
+    <h1 class="visually-hidden">Your Energy — fitness exercises catalog</h1>
+
+    <Hero />
+
+    <section class="exercises">
+      <div class="container">
+        <div class="exercises__head">
+          <h2 class="exercises__title"></h2>
+          <Filters />
+        </div>
+
+        <div class="exercises__body">
+          <aside class="exercises__aside">
+            <Quote />
+            <DailyNorm />
+          </aside>
+
+          <div class="exercises__content">
+            <CategoryList />
+            <Pagination />
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</BaseLayout>
+
+<style lang="scss">
+  @use '../styles/abstracts' as *;
+
+  .exercises {
+    padding-block: 40px;
+
+    &__head {
+      margin-bottom: 24px;
+    }
+
+    &__body {
+      display: grid;
+      gap: 24px;
+
+      @include respond($bp-tablet) {
+        grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+        align-items: start;
+        gap: 32px;
+      }
+    }
+
+    &__aside {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+  }
+</style>

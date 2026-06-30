@@ -1,0 +1,77 @@
+---
+import 'modern-normalize';
+import '../styles/main.scss';
+import Footer from '../components/footer/Footer.astro';
+import Header from '../components/header/Header.astro';
+import ScrollUp from '../components/ui/scroll-up/ScrollUp.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  ogImage?: string;
+}
+
+const SITE_NAME = 'Your Energy';
+const { title, description, ogImage = 'og-image.svg' } = Astro.props;
+
+const baseRoot = import.meta.env.BASE_URL.replace(/\/$/, '');
+const withBase = (path: string) => `${baseRoot}/${path.replace(/^\//, '')}`;
+
+const canonicalUrl = new URL(Astro.url.pathname, Astro.site).href;
+const ogImageUrl = new URL(withBase(ogImage), Astro.site).href;
+const faviconHref = withBase('favicon.svg');
+const sitemapHref = withBase('sitemap-index.xml');
+
+const websiteSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: SITE_NAME,
+  url: new URL(withBase(''), Astro.site).href,
+  description,
+};
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalUrl} />
+    <link rel="icon" href={faviconHref} type="image/svg+xml" />
+    <link rel="sitemap" type="application/xml" href={sitemapHref} />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={SITE_NAME} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:image" content={ogImageUrl} />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageUrl} />
+
+    <script
+      type="application/ld+json"
+      set:html={JSON.stringify(websiteSchema)}
+    />
+  </head>
+  <body>
+    <Header />
+
+    <slot />
+
+    <Footer />
+    <ScrollUp />
+
+    <div id="modal-root"></div>
+
+    <script>
+      import { connectApiUi } from '../api/connect-ui.js';
+      connectApiUi();
+    </script>
+  </body>
+</html>

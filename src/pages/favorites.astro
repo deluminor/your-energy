@@ -1,0 +1,53 @@
+---
+import DailyNorm from '../components/daily-norm/DailyNorm.astro';
+import FavoritesList from '../components/exercise-card/FavoritesList.astro';
+import Quote from '../components/quote/Quote.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const title = 'Your Energy — Favorites';
+const description = 'Your favorite exercises from the Your Energy catalog.';
+---
+
+<BaseLayout title={title} description={description}>
+  <main>
+    <section class="favorites">
+      <div class="container">
+        <h1 class="favorites__title">Favorites</h1>
+
+        <div class="favorites__body">
+          <aside class="favorites__aside">
+            <Quote />
+            <DailyNorm />
+          </aside>
+
+          <FavoritesList />
+        </div>
+      </div>
+    </section>
+  </main>
+</BaseLayout>
+
+<style lang="scss">
+  @use '../styles/abstracts' as *;
+
+  .favorites {
+    padding-block: 40px;
+
+    &__body {
+      display: grid;
+      gap: 24px;
+
+      @include respond($bp-tablet) {
+        grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+        align-items: start;
+        gap: 32px;
+      }
+    }
+
+    &__aside {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+  }
+</style>

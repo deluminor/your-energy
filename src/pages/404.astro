@@ -1,0 +1,68 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const title = 'Your Energy — Page not found';
+const description = 'The page you are looking for does not exist.';
+
+const homeHref = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+---
+
+<BaseLayout title={title} description={description}>
+  <main class="not-found">
+    <div class="container not-found__inner">
+      <p class="not-found__code">404</p>
+      <h1 class="not-found__title">Page not found</h1>
+      <p class="not-found__text">
+        The page you are looking for might have been moved or no longer exists.
+      </p>
+      <a class="not-found__home" href={homeHref}>Back to home</a>
+    </div>
+  </main>
+</BaseLayout>
+
+<style lang="scss">
+  @use '../styles/abstracts' as *;
+
+  .not-found {
+    padding-block: 80px;
+
+    &__inner {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      text-align: center;
+    }
+
+    &__code {
+      font-size: 72px;
+      font-weight: 700;
+      line-height: 1;
+      color: $color-accent;
+    }
+
+    &__title {
+      font-size: 28px;
+      font-weight: 600;
+    }
+
+    &__text {
+      max-width: 420px;
+      color: $color-text-muted;
+    }
+
+    &__home {
+      margin-top: 8px;
+      padding: 12px 24px;
+      border-radius: $radius-sm;
+      background-color: $color-accent;
+      color: $color-white;
+      font-weight: 500;
+      transition: opacity $transition;
+
+      &:hover {
+        opacity: 0.85;
+      }
+    }
+  }
+</style>
