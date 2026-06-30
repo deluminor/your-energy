@@ -88,11 +88,11 @@ your-energy/
 ├── index.html               # Home entry
 ├── favorites.html           # Favorites entry
 └── src/
-    ├── api/                 # Axios instance + endpoint modules (no DOM)
+    ├── api/                 # Axios instance, normalizers, endpoint modules (no DOM)
     ├── components/          # feature components (.js + .scss co-located)
     │   └── ui/              # reusable primitives (button, loader, badge, …)
     ├── services/            # store, favorites, cache, storage (state orchestration)
-    ├── utils/               # constants, validators, notify
+    ├── utils/               # constants, validators, notify, api-events
     ├── styles/              # abstracts / base / layout / pages + main.scss
     └── pages/               # home.js, favorites.js — page bootstraps
 ```
@@ -101,7 +101,7 @@ your-energy/
 
 Organized **by feature, not by type**, with strict layer boundaries:
 
-- **`api/`** never touches the DOM. All HTTP goes through the shared `http` instance ([`api/instance.js`](src/api/instance.js)).
+- **`api/`** never touches the DOM. All HTTP goes through the shared `http` instance ([`api/instance.js`](src/api/instance.js)); loader and toast side effects are emitted as events and wired in [`api/connect-ui.js`](src/api/connect-ui.js) at page bootstrap.
 - **`services/`** never call the backend directly — they orchestrate `api/` together with the store, cache, and storage.
 - **`components/`** only render and listen for events. They read shared state from [`services/store.service.js`](src/services/store.service.js) and persist favorites via [`services/favorites.service.js`](src/services/favorites.service.js).
 - **No raw `localStorage` / `JSON.parse`** outside [`services/storage.service.js`](src/services/storage.service.js).
@@ -109,7 +109,7 @@ Organized **by feature, not by type**, with strict layer boundaries:
 
 ### Layer model
 
-Dependency direction is **one-way**: `pages → components → services → api`. `utils` is shared everywhere; `styles` are consumed by pages and components. The only intentional upward edge is `api/instance.js → ui/loader` (interceptors drive the loader).
+Dependency direction is **one-way**: `pages → components → services → api`. `utils` is shared everywhere; `styles` are consumed by pages and components. Interceptors emit UI events via [`utils/api-events.js`](src/utils/api-events.js); each page entry calls [`connectApiUi()`](src/api/connect-ui.js) once to attach the loader and toasts — `api/` itself stays UI-agnostic.
 
 ```mermaid
 flowchart TB
@@ -143,7 +143,8 @@ flowchart TB
 
   subgraph L4["④ Data access — api/"]
     direction LR
-    HTTP["instance.js · Axios + loader + toasts"]
+    HTTP["instance.js · Axios + interceptors"]
+    CONNECT["connect-ui.js · wires loader + toasts"]
     ENDPOINTS["filters · exercises · quote · subscription"]
     ENDPOINTS --> HTTP
   end
@@ -154,7 +155,7 @@ flowchart TB
 
   subgraph SHARED["Shared cross-cutting"]
     direction LR
-    UTILS["utils/ · constants · validators · notify"]
+    UTILS["utils/ · constants · validators · notify · api-events"]
     STYLES["styles/ · SCSS tokens + main.scss"]
     LS[("localStorage")]
   end
@@ -171,7 +172,9 @@ flowchart TB
   L2 --> UTILS
   L3 --> UTILS
   L4 --> UTILS
-  HTTP -. loader .-> UI
+  HTTP -. emit .-> UTILS
+  CONNECT -. loader / toasts .-> UI
+  L1 --> CONNECT
   L1 --> STYLES
   L2 --> STYLES
 ```
@@ -238,17 +241,17 @@ sequenceDiagram
   UI->>Store: setState({ activeFilter, category, page })
   Store-->>UI: subscribe() callback
   UI->>Cache: withCache(cacheKey, producer)
-  alt cache hit (TTL 5 min)
-    Cache-->>UI: cached data
+  alt cache hit (TTL 5 min) or in-flight promise
+    Cache-->>UI: cached / shared promise
   else cache miss
     Cache->>API: getExercises / getFilters(...)
     API->>HTTP: http.get(…, { meta: { loader } })
-    HTTP->>Loader: showLoader (global / local / silent)
+    HTTP->>Loader: emit loader:show (global / local / silent)
     HTTP->>Backend: REST request
     Backend-->>HTTP: JSON response
-    HTTP->>Loader: hideLoader
+    HTTP->>Loader: emit loader:hide
     HTTP-->>API: data
-    API-->>Cache: result
+    API-->>Cache: normalize + cache result
     Cache-->>UI: fresh data
   end
   UI->>DOM: innerHTML = render*(data)
@@ -257,28 +260,29 @@ sequenceDiagram
 
 ## Working in `src/` (per-folder guide)
 
-What belongs in each folder, the rules, and a minimal example. The dependency direction is one-way: `pages → components → services → api`, with `utils` shared by all and `styles` consumed by `components`/`pages`. Never import "upwards" (e.g. `api` importing a component) — the only exception is the loader primitive, which the axios interceptors drive by design.
+What belongs in each folder, the rules, and a minimal example. The dependency direction is one-way: `pages → components → services → api`, with `utils` shared by all and `styles` consumed by `components`/`pages`. Never import "upwards" (e.g. `api` importing a component). UI side effects from interceptors go through [`utils/api-events.js`](src/utils/api-events.js) and are wired in [`api/connect-ui.js`](src/api/connect-ui.js) at page bootstrap.
 
 ### `src/api/` — backend access
 
-One module per API resource plus the shared axios instance. **No DOM, no business logic, no state.** Each function imports `http`, returns `data`, and accepts an optional `{ loader }` target.
+One module per API resource plus the shared axios instance and response normalizers. **No DOM, no business logic, no state.** Each function imports `http`, validates the response shape via [`normalizers.js`](src/api/normalizers.js), and accepts an optional `{ loader }` target.
 
 ```js
 // api/quote.api.js
 import { http } from './instance.js';
+import { normalizeQuote } from './normalizers.js';
 import { ENDPOINTS } from '../utils/constants.js';
 
 export async function getQuote({ loader } = {}) {
   const { data } = await http.get(ENDPOINTS.quote, { meta: { loader } });
-  return data;
+  return normalizeQuote(data);
 }
 ```
 
-> Add new endpoints here, never call `axios` directly from a component, and put the URL in [`utils/constants.js`](src/utils/constants.js).
+> Add new endpoints here, never call `axios` directly from a component, put the URL in [`utils/constants.js`](src/utils/constants.js), and add a guard in `normalizers.js` for the response shape.
 
 ### `src/utils/` — pure helpers & constants
 
-Stateless, side-effect-free helpers and shared constants. **No DOM, no HTTP, no state.** One helper group per file; constants live in [`constants.js`](src/utils/constants.js).
+Stateless, side-effect-free helpers and shared constants. **No DOM, no HTTP, no state** — except [`api-events.js`](src/utils/api-events.js), a tiny pub/sub bus used by Axios interceptors to emit loader/notify events without importing UI modules. One helper group per file; constants live in [`constants.js`](src/utils/constants.js).
 
 ```js
 import { isValidEmail } from '../utils/validators.js';
@@ -291,7 +295,7 @@ if (!isValidEmail(email)) notifyError('Invalid email');
 
 ### `src/services/` — state & orchestration
 
-The stateful layer: the observable **store**, **favorites** (localStorage), **cache** (TTL), and the **storage** wrapper. Services orchestrate `api/` + persistence + state. **No DOM, no markup.** This is the only place allowed to touch `localStorage` (via [`storage.service.js`](src/services/storage.service.js)).
+The stateful layer: the observable **store**, **favorites** (localStorage), **cache** (TTL + in-flight deduplication), and the **storage** wrapper. Services orchestrate `api/` + persistence + state. **No DOM, no markup.** This is the only place allowed to touch `localStorage` (via [`storage.service.js`](src/services/storage.service.js)).
 
 ```js
 // a feature flow: cache the request, then publish to the store
@@ -341,15 +345,17 @@ export async function mountQuote(root) {
 
 ### `src/pages/` — entry points
 
-Thin bootstraps — `home.js` and `favorites.js`. They import the global stylesheet, then mount the page's components and kick off the initial data flow. **No rendering logic here** — delegate to components/services.
+Thin bootstraps — `home.js` and `favorites.js`. They import the global stylesheet, call [`connectApiUi()`](src/api/connect-ui.js) once to wire loader/toast handlers, then mount the page's components. **No rendering logic here** — delegate to components/services.
 
 ```js
 // pages/home.js
 import 'modern-normalize';
+import { connectApiUi } from '../api/connect-ui.js';
 import '../styles/main.scss';
 import { mountQuote } from '../components/quote/quote.js';
 
 function bootstrap() {
+  connectApiUi();
   mountQuote(document.querySelector('[data-component="quote"]'));
   // mount header, filters, category list, pagination, footer…
 }
@@ -384,7 +390,7 @@ The three patterns below are the project's shared conventions. Follow them so te
 
 ### Shared State (store)
 
-[`services/store.service.js`](src/services/store.service.js) is a tiny observable holding the **single source of truth** for shared UI state: `activeFilter`, `category`, `page`, and `keyword`. Components read it, subscribe to changes, and mutate it **only** through `setState`. The store never calls the API and never touches the DOM.
+[`services/store.service.js`](src/services/store.service.js) is a tiny observable holding the **single source of truth** for shared UI state: `activeFilter`, `category`, `page`, and `keyword`. Components read it, subscribe to changes, and mutate it **only** through `setState`. `getState()` and subscriber callbacks receive a **frozen shallow copy** — never mutate the returned object. The store never calls the API and never touches the DOM.
 
 ```js
 import { getState, setState, subscribe } from '../services/store.service.js';
@@ -443,7 +449,7 @@ container.addEventListener('click', (event) => {
 
 ### Loading Indicator (loader)
 
-The loader is **fully centralized in the Axios interceptors** — feature code never calls `showLoader` / `hideLoader`. Instead, each request declares a target via `config.meta.loader`, and the interceptor places the loader accordingly. Targets are reference-counted, so parallel requests to the same target won't hide it early.
+The loader is **fully centralized in the Axios interceptors** — feature code never calls `showLoader` / `hideLoader`. Interceptors emit `loader:show` / `loader:hide` events; [`connectApiUi()`](src/api/connect-ui.js) attaches the loader handlers at page bootstrap. Each request declares a target via `config.meta.loader`. Targets are reference-counted by **selector string** (not DOM node reference), so parallel requests to the same target won't hide it early and re-renders of a local container won't orphan the overlay.
 
 ```js
 import { LOADER } from '../utils/constants.js';
@@ -532,7 +538,7 @@ The Vite `base` in [`vite.config.js`](vite.config.js) must match the repository 
 
 ### Code boundaries
 
-Keep the layer rules in [Architecture](#architecture) — `api/` has no DOM, `services/` don't call the backend directly, `components/` only render and react to the store. No barrel imports.
+Keep the layer rules in [Architecture](#architecture) — `api/` has no DOM, `services/` don't call the backend directly, `components/` only render and react to the store, interceptors emit UI events instead of importing components. No barrel imports.
 
 ### Before a PR
 
