@@ -1,0 +1,11 @@
+<div data-component="favorites-list">
+  <div class="placeholder">Favorites list</div>
+</div>
+
+<script>
+  import { initFavoritesList } from './favorites-list.client.js';
+
+  initFavoritesList(
+    document.querySelector('[data-component="favorites-list"]'),
+  );
+</script>
