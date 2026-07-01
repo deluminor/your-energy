@@ -47,11 +47,17 @@
   }
 
   async function renderQuote() {
-    const textEl = document.querySelector('[data-quote-text]');
-    const authorEl = document.querySelector('[data-quote-author]');
-    const today = getTodayKey();
+    const textEl =
+      document.querySelector<HTMLParagraphElement>('[data-quote-text]');
+    const authorEl = document.querySelector<HTMLParagraphElement>(
+      '[data-quote-author]',
+    );
 
+    if (!textEl || !authorEl) return;
+
+    const today = getTodayKey();
     const cachedRaw = localStorage.getItem(STORAGE_KEY);
+
     if (cachedRaw) {
       try {
         const cached = JSON.parse(cachedRaw);
