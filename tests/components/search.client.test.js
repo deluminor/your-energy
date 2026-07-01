@@ -23,7 +23,11 @@ async function setup() {
   root.setAttribute('data-component', 'search');
   input = document.createElement('input');
   input.className = 'search__input';
-  root.append(input);
+  const clearButton = document.createElement('button');
+  clearButton.type = 'button';
+  clearButton.className = 'search__clear';
+  clearButton.hidden = true;
+  root.append(input, clearButton);
   document.body.append(root);
 
   teardown = initSearch(root);
@@ -79,5 +83,40 @@ describe('search island', () => {
     });
 
     expect(input.value).toBe('plank');
+  });
+
+  it('shows the clear button only when the input has text', () => {
+    store.setState({ category: { name: 'waist', filter: 'bodypart' } });
+
+    const clearButton = /** @type {HTMLButtonElement | null} */ (
+      root.querySelector('.search__clear')
+    );
+
+    expect(clearButton?.hidden).toBe(true);
+
+    input.value = 'air';
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+
+    expect(clearButton?.hidden).toBe(false);
+  });
+
+  it('clears the keyword and resets to page 1 when clear is clicked', () => {
+    store.setState({
+      category: { name: 'waist', filter: 'bodypart' },
+      keyword: 'air bike',
+      page: 3,
+    });
+
+    const clearButton = /** @type {HTMLButtonElement} */ (
+      root.querySelector('.search__clear')
+    );
+
+    clearButton.click();
+
+    const state = store.getState();
+    expect(state.keyword).toBe('');
+    expect(state.page).toBe(1);
+    expect(input.value).toBe('');
+    expect(clearButton.hidden).toBe(true);
   });
 });
