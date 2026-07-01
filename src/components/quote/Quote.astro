@@ -1,3 +1,58 @@
+---
+
+---
+
 <div class="quote">
-  <div class="placeholder">Quote of the day</div>
+  <div class="quote__header">
+    <span class="quote__icon">
+      <svg width="18" height="18" aria-hidden="true">
+        <use href="#icon-running"></use>
+      </svg>
+    </span>
+    <h3 class="quote__title">Quote of the day</h3>
+    <svg class="quote__mark" width="26" height="18" aria-hidden="true">
+      <use href="#icon-inverted-commas"></use>
+    </svg>
+  </div>
+  <p class="quote__text" data-quote-text>Loading...</p>
+  <p class="quote__author" data-quote-author></p>
 </div>
+
+<script>
+  import { getQuote } from '../../api/quote.api.js';
+  import { readJSON, writeJSON } from '../../services/storage.service.js';
+
+  type CachedQuote = { date: string; quote: string; author: string };
+
+  const STORAGE_KEY = 'quoteOfTheDay';
+
+  function getTodayKey() {
+    return new Date().toISOString().slice(0, 10); // YYYY-MM-DD
+  }
+
+  async function renderQuote() {
+    const textEl =
+      document.querySelector<HTMLParagraphElement>('[data-quote-text]');
+    const authorEl = document.querySelector<HTMLParagraphElement>(
+      '[data-quote-author]',
+    );
+
+    if (!textEl || !authorEl) return;
+
+    const today = getTodayKey();
+    const cached = readJSON<CachedQuote | null>(STORAGE_KEY, null);
+
+    if (cached && cached.date === today) {
+      textEl.textContent = cached.quote;
+      authorEl.textContent = cached.author;
+      return;
+    }
+
+    const { quote, author } = await getQuote();
+    textEl.textContent = quote;
+    authorEl.textContent = author;
+    writeJSON(STORAGE_KEY, { date: today, quote, author });
+  }
+
+  renderQuote();
+</script>

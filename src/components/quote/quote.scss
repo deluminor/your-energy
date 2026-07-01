@@ -1,1 +1,66 @@
 @use '../../styles/abstracts' as *;
+
+.quote {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 32px;
+  border-radius: $radius-md;
+  background-color: $color-heading;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  &__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background-color: rgba($color-white, 0.12);
+    color: $color-on-media;
+  }
+
+  &__title {
+    flex: 1;
+    margin: 0;
+    font-family: $font-primary;
+    font-weight: $font-weight-medium;
+    font-size: 28px;
+    color: $color-on-media;
+  }
+
+  &__mark {
+    flex-shrink: 0;
+    color: $color-on-media;
+  }
+
+  &__text {
+    margin: 0;
+    font-family: $font-primary;
+    font-weight: $font-weight-regular;
+    font-size: 18px;
+    line-height: 1.5;
+    color: $color-on-media-muted;
+  }
+
+  &__author {
+    margin: 0;
+    font-family: $font-primary;
+    font-weight: $font-weight-medium;
+    font-size: 20px;
+    color: $color-on-media;
+  }
+}
+.quote__icon svg {
+  fill: currentColor;
+}
+
+.quote__mark {
+  fill: currentColor;
+}
