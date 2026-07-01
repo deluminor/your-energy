@@ -1,1 +1,121 @@
 @use '../../styles/abstracts' as *;
+
+$pagination-border-disabled: rgba(36, 36, 36, 0.1);
+$pagination-icon-disabled: rgba(36, 36, 36, 0.5);
+
+.pagination {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 32px;
+
+  &[hidden] {
+    display: none;
+  }
+
+  &__arrows {
+    display: flex;
+    gap: 4px;
+  }
+
+  &__arrow {
+    @include flex-center;
+
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    border: 1px solid $color-heading;
+    border-radius: 18px;
+    background: transparent;
+    color: $color-heading;
+    cursor: pointer;
+    transition:
+      border-color $transition,
+      color $transition;
+
+    &--disabled,
+    &:disabled {
+      border-color: $pagination-border-disabled;
+      color: $pagination-icon-disabled;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+
+    &:not(:disabled):hover {
+      border-color: $color-heading-muted;
+    }
+
+    &:focus-visible {
+      outline: 2px solid $color-accent;
+      outline-offset: 2px;
+    }
+  }
+
+  &__icon {
+    display: block;
+    flex-shrink: 0;
+  }
+
+  &__icon-set--double {
+    display: flex;
+    align-items: center;
+
+    .pagination__icon + .pagination__icon {
+      margin-left: -8px;
+    }
+  }
+
+  &__pages {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  &__page {
+    @include flex-center;
+
+    min-width: 32px;
+    height: 32px;
+    padding: 0 4px;
+    border: 0;
+    border-radius: 18px;
+    background: transparent;
+    font-family: inherit;
+    font-size: 24px;
+    line-height: 32px;
+    font-weight: 400;
+    letter-spacing: 0.04em;
+    color: $color-page-inactive;
+    cursor: pointer;
+    transition: color $transition;
+
+    &--active {
+      width: 32px;
+      padding: 0;
+      border: 1px solid $color-heading;
+      color: $color-heading;
+      cursor: default;
+      pointer-events: none;
+    }
+
+    &:not(&--active):hover {
+      color: $color-heading-muted;
+    }
+
+    &:focus-visible {
+      outline: 2px solid $color-accent;
+      outline-offset: 2px;
+    }
+  }
+
+  &__ellipsis {
+    min-width: 16px;
+    font-size: 24px;
+    line-height: 32px;
+    font-weight: 400;
+    letter-spacing: 0.04em;
+    color: $color-page-inactive;
+    text-align: center;
+  }
+}

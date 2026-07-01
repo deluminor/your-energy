@@ -32,10 +32,13 @@ filters  → filter tabs → store
 
 Content comes from **runtime** (API / localStorage), so `init*(root)` fetches it and
 renders into the host via `innerHTML`. Escape any dynamic value with
-`utils/escape-html`. `quote` is the reference implementation.
+`utils/escape-html`. `category-list` is the reference implementation.
+
+**Loading UX:** category-list uses `LOADER.SILENT` on fetch and renders its own
+inline spinner / dimmed cards — avoids the white local overlay from `meta.loader`.
 
 ```
-quote (reference) · category-card/CategoryList · pagination · exercise-card/FavoritesList
+category-list (reference) · pagination · exercise-card/FavoritesList · quote (stub)
 ```
 
 ## Primitives — `ui/`

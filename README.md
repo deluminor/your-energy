@@ -330,21 +330,19 @@ Feature components are `.astro` files (static markup + optional co-located `<scr
 Every section follows the **uniform island contract** — `Component.astro` (static host with a `data-component` hook) + `<name>.client.js` (`init<Name>(root)` seam) + `<script>` that wires them:
 
 ```astro
-<figure class="quote" data-component="quote">
-  <div class="placeholder">Quote of the day</div>
-</figure>
+<ul class="category-list" data-component="category-list"></ul>
 
 <script>
-  import { initQuote } from './quote.client.js';
+  import { initCategoryList } from './category-list.client.js';
 
-  initQuote(document.querySelector('[data-component="quote"]'));
+  initCategoryList(document.querySelector('[data-component="category-list"]'));
 </script>
 ```
 
-> **Current state — the contract is wired everywhere; logic is stubbed except two working references.** Each section renders a visible dashed placeholder at build time and calls its `init<Name>(root)` seam on the client. Fill the seam (reuse `api/` + `services/` + `utils/`) and keep the `data-component` hook so loaders/queries keep targeting it.
+> **Current state — the contract is wired everywhere; logic is stubbed except working references.** Each section renders a visible dashed placeholder at build time and calls its `init<Name>(root)` seam on the client. Fill the seam (reuse `api/` + `services/` + `utils/`) and keep the `data-component` hook so loaders/queries keep targeting it.
 >
-> - **Sections** (`header`, `hero`, `filters`, `category-card`, `exercise-card`, `pagination`, `daily-norm`, `footer`) ship a static placeholder + an empty `init<Name>(root)` seam ready to implement.
-> - **Working references** — [`quote`](src/components/quote/quote.client.js) (fetch + per-day cache + render) and [`scroll-up`](src/components/ui/scroll-up/scroll-up.client.js) (show-on-scroll + scroll-to-top) are implemented end-to-end as templates.
+> - **Sections** (`header`, `hero`, `filters`, `category-list`, `exercise-card`, `pagination`, `daily-norm`, `footer`, `quote`) ship a static placeholder + an empty or partial `init<Name>(root)` seam.
+> - **Working references** — [`category-list`](src/components/category-list/category-list.client.js) (fetch + store + inline loading states) and [`scroll-up`](src/components/ui/scroll-up/scroll-up.client.js) (show-on-scroll + scroll-to-top).
 > - **Modals** (`exercise-modal`, `rating-modal`) export `open<Name>(...)` and open on user action (not on load). The shell — backdrop, close button, X / backdrop / Escape handling, **focus trap, body scroll lock, focus restore, accessible name**, listener cleanup, and "one modal at a time" — lives in the `ui/modal` primitive ([`openModal`](src/components/ui/modal/modal.js)); each modal supplies only its body content and an `aria-label`.
 > - **`ui/` primitives are JS by design, not `.astro`.** Lists (categories, exercises, pagination) are rendered on the client via `innerHTML`, and an `.astro` component cannot be embedded in a runtime HTML string. So `ui/button`, `ui/badge`, `ui/rating-stars` export pure `render<Name>(props)` string builders composed inside those client islands; `ui/loader` and `ui/modal` are imperative runtime primitives (overlay + modal shell). Converting them to `.astro` would create an unusable second source of truth — avoid it.
 

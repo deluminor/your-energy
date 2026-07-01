@@ -1,1 +1,55 @@
 @use '../../styles/abstracts' as *;
+
+.filters {
+  display: flex;
+  gap: 20px;
+
+  &__tab {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+    font-family: inherit;
+    text-align: left;
+  }
+
+  &__label {
+    font-size: 14px;
+    line-height: 20px;
+    font-weight: 400;
+    color: $color-heading-muted;
+    white-space: nowrap;
+    transition: color $transition;
+
+    @include respond($bp-tablet) {
+      font-size: 16px;
+      line-height: 24px;
+    }
+  }
+
+  &__underline {
+    height: 4px;
+    border-radius: 2px;
+    background: transparent;
+    transition: background-color $transition;
+  }
+
+  &__tab--active {
+    .filters__label {
+      color: $color-heading;
+    }
+
+    .filters__underline {
+      background: $color-heading;
+    }
+  }
+
+  &__tab:focus-visible {
+    outline: 2px solid $color-accent;
+    outline-offset: 4px;
+    border-radius: 2px;
+  }
+}

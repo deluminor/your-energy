@@ -23,11 +23,21 @@ export function normalizePaginated(data) {
     throw new Error('API: paginated results must be an array');
   }
 
-  if (typeof totalPages !== 'number' || typeof page !== 'number') {
-    throw new Error('API: paginated page metadata must be numbers');
+  const normalizedPage = Number(page);
+  const normalizedTotalPages = Number(totalPages);
+
+  if (
+    !Number.isFinite(normalizedPage) ||
+    !Number.isFinite(normalizedTotalPages)
+  ) {
+    throw new Error('API: paginated page metadata must be numeric');
   }
 
-  return { results, totalPages, page };
+  return {
+    results,
+    totalPages: normalizedTotalPages,
+    page: normalizedPage,
+  };
 }
 
 /**

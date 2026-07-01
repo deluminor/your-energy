@@ -1,1 +1,80 @@
 @use '../../styles/abstracts' as *;
+
+.category-card {
+  @include flex-center;
+
+  position: relative;
+  overflow: hidden;
+  flex-direction: column;
+  gap: 2px;
+  width: 100%;
+  height: 242px;
+  padding: 0;
+  border: 0;
+  border-radius: $radius-sm;
+  background-color: $color-heading;
+  background-image: var(--card-image);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  cursor: pointer;
+  transition: box-shadow $transition;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    border-radius: inherit;
+    background-color: $color-overlay;
+    transition: background-color $transition;
+  }
+
+  &__name,
+  &__caption {
+    position: relative;
+    z-index: 1;
+  }
+
+  &__name {
+    font-size: 20px;
+    line-height: 20px;
+    font-weight: 400;
+    color: $color-on-media;
+    text-align: center;
+    text-transform: capitalize;
+
+    @include respond($bp-tablet) {
+      font-size: 24px;
+      line-height: 24px;
+    }
+  }
+
+  &__caption {
+    font-size: 12px;
+    line-height: 18px;
+    font-weight: 400;
+    color: $color-on-media-muted;
+    text-align: center;
+  }
+
+  @media (hover: hover) {
+    &:hover {
+      box-shadow: 0 4px 14px rgba(36, 36, 36, 0.12);
+
+      &::before {
+        background-color: rgba(17, 17, 17, 0.28);
+      }
+    }
+  }
+
+  &:focus-visible {
+    box-shadow: 0 4px 14px rgba(36, 36, 36, 0.12);
+    outline: 2px solid $color-accent;
+    outline-offset: 4px;
+
+    &::before {
+      background-color: rgba(17, 17, 17, 0.28);
+    }
+  }
+}

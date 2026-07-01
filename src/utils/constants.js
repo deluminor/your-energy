@@ -27,6 +27,13 @@ export const PAGE_LIMIT = {
 export const STORAGE_KEYS = {
   FAVORITES: 'your-energy:favorites',
   QUOTE: 'your-energy:quote-of-the-day',
+  UI_STATE: 'your-energy:ui-state',
+};
+
+export const FILTER_PARAM = {
+  [FILTER.MUSCLES]: 'muscles',
+  [FILTER.BODY_PARTS]: 'bodypart',
+  [FILTER.EQUIPMENT]: 'equipment',
 };
 
 export const EMAIL_PATTERN = /^\w+(\.\w+)?@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/;

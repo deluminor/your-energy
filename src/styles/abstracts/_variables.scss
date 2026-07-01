@@ -1,13 +1,25 @@
 // Colors
 $color-text: #1b1b1b;
 $color-text-muted: #5b5b5b;
-$color-bg: #fbfbfb;
+$color-bg: #f4f4f4;
 $color-accent: #ef8964;
 $color-border: rgba(27, 27, 27, 0.1);
 $color-white: #ffffff;
 
+// Semantic — headings, tabs, cards, pagination
+$color-heading: #242424;
+$color-heading-muted: rgba(36, 36, 36, 0.6);
+$color-on-media: #f4f4f4;
+$color-on-media-muted: rgba(244, 244, 244, 0.4);
+$color-overlay: rgba(17, 17, 17, 0.5);
+$color-page-inactive: #d5d5d5;
+$color-star: #eea10c;
+$color-label-muted: rgba(36, 36, 36, 0.4);
+
 // Typography
 $font-primary: 'DM Sans', sans-serif;
+$font-weight-regular: 400;
+$font-weight-medium: 500;
 
 // Layout
 $container-max: 1440px;

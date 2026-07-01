@@ -20,5 +20,13 @@ export default [
       'no-var': 'error',
     },
   },
+  {
+    files: ['tests/**/*.js'],
+    languageOptions: {
+      ecmaVersion: 2023,
+      sourceType: 'module',
+      globals: { ...globals.browser, ...globals.node },
+    },
+  },
   prettier,
 ];

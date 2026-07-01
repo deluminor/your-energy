@@ -15,9 +15,13 @@
 
 @use '../components/header/header';
 @use '../components/hero/hero';
+@use '../components/breadcrumb/breadcrumb';
+@use '../components/search/search';
 @use '../components/filters/filters';
+@use '../components/category-list/category-list';
 @use '../components/category-card/category-card';
 @use '../components/daily-norm/daily-norm';
+@use '../components/exercise-list/exercise-list';
 @use '../components/exercise-card/exercise-card';
 @use '../components/exercise-modal/exercise-modal';
 @use '../components/rating-modal/rating-modal';

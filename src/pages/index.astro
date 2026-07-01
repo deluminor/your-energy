@@ -1,10 +1,13 @@
 ---
-import CategoryList from '../components/category-card/CategoryList.astro';
+import Breadcrumb from '../components/breadcrumb/Breadcrumb.astro';
+import CategoryList from '../components/category-list/CategoryList.astro';
 import DailyNorm from '../components/daily-norm/DailyNorm.astro';
+import ExerciseList from '../components/exercise-list/ExerciseList.astro';
 import Filters from '../components/filters/Filters.astro';
 import Hero from '../components/hero/Hero.astro';
 import Pagination from '../components/pagination/Pagination.astro';
 import Quote from '../components/quote/Quote.astro';
+import Search from '../components/search/Search.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
 
 const title = 'Your Energy';
@@ -21,11 +24,14 @@ const description =
     <section class="exercises">
       <div class="container">
         <div class="exercises__head">
-          <h2 class="exercises__title"></h2>
-          <Filters />
+          <Breadcrumb />
+          <div class="exercises__controls">
+            <Search />
+            <Filters />
+          </div>
         </div>
 
-        <div class="exercises__body">
+        <div class="exercises__layout">
           <aside class="exercises__aside">
             <Quote />
             <DailyNorm />
@@ -33,6 +39,7 @@ const description =
 
           <div class="exercises__content">
             <CategoryList />
+            <ExerciseList />
             <Pagination />
           </div>
         </div>
@@ -48,14 +55,49 @@ const description =
     padding-block: 40px;
 
     &__head {
-      margin-bottom: 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 20px;
+      margin-bottom: 32px;
+
+      @include respond($bp-desktop) {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        gap: 24px;
+      }
     }
 
-    &__body {
-      display: grid;
-      gap: 24px;
+    &__controls {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      width: 100%;
 
       @include respond($bp-tablet) {
+        flex-direction: row;
+        align-items: center;
+        gap: 24px;
+      }
+
+      @include respond($bp-desktop) {
+        width: auto;
+        justify-content: flex-end;
+      }
+    }
+
+    &__layout {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+
+      @include respond($bp-tablet) {
+        gap: 32px;
+      }
+
+      @include respond($bp-desktop) {
+        display: grid;
         grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
         align-items: start;
         gap: 32px;
@@ -63,9 +105,29 @@ const description =
     }
 
     &__aside {
+      order: 2;
       display: flex;
       flex-direction: column;
       gap: 20px;
+    }
+
+    &__content {
+      order: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    @include respond($bp-tablet) {
+      &__aside {
+        gap: 20px;
+      }
+    }
+
+    @include respond($bp-desktop) {
+      &__aside,
+      &__content {
+        order: unset;
+      }
     }
   }
 </style>

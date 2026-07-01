@@ -6,8 +6,14 @@ html {
 
 body {
   font-family: $font-primary;
+  font-weight: $font-weight-regular;
   color: $color-text;
   line-height: 1.5;
+}
+
+em,
+i {
+  font-style: italic;
 }
 
 h1,
@@ -15,4 +21,17 @@ h2,
 h3 {
   line-height: 1.1;
   font-weight: 700;
+}
+
+.section-title {
+  font-size: 28px;
+  line-height: 32px;
+  font-weight: $font-weight-regular;
+  letter-spacing: -0.02em;
+  color: $color-heading;
+
+  @include respond($bp-tablet) {
+    font-size: 44px;
+    line-height: 48px;
+  }
 }

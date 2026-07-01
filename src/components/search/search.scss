@@ -1,0 +1,68 @@
+@use '../../styles/abstracts' as *;
+
+.search {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  height: 48px;
+  padding: 12px 14px;
+  border: 1px solid $color-heading;
+  border-radius: 30px;
+
+  &[hidden] {
+    display: none;
+  }
+
+  @include respond($bp-tablet) {
+    width: 273px;
+  }
+
+  &__input {
+    flex: 1 1 auto;
+    min-width: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    font-family: inherit;
+    font-size: 16px;
+    line-height: 24px;
+    color: $color-heading;
+
+    &::placeholder {
+      color: $color-heading;
+    }
+
+    &:focus-visible {
+      outline: none;
+    }
+
+    &::-webkit-search-cancel-button {
+      appearance: none;
+    }
+  }
+
+  &__submit {
+    @include flex-center;
+
+    flex-shrink: 0;
+    width: 18px;
+    height: 18px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: $color-heading;
+    cursor: pointer;
+
+    &:focus-visible {
+      outline: 2px solid $color-accent;
+      outline-offset: 4px;
+      border-radius: 4px;
+    }
+  }
+
+  &:focus-within {
+    border-color: $color-heading;
+    box-shadow: 0 0 0 1px $color-heading;
+  }
+}
