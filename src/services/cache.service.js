@@ -11,8 +11,6 @@ import { CACHE_TTL_MS } from '../utils/constants.js';
 const cache = new Map();
 
 /**
- * Returns the cached value for `key`, or runs `producer`, caches and returns it.
- * In-flight requests are deduplicated by caching the pending promise.
  * @template T
  * @param {string} key
  * @param {() => Promise<T>} producer

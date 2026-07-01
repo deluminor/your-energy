@@ -16,6 +16,12 @@ $color-page-inactive: #d5d5d5;
 $color-star: #eea10c;
 $color-label-muted: rgba(36, 36, 36, 0.4);
 
+// Scrollbar
+$scrollbar-size: 8px;
+$scrollbar-track: #dfdfdf;
+$scrollbar-thumb: $color-heading;
+$scrollbar-radius: 12px;
+
 // Typography
 $font-primary: 'DM Sans', sans-serif;
 $font-weight-regular: 400;

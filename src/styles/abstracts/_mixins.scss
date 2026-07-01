@@ -19,3 +19,36 @@
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
+
+@mixin custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: $scrollbar-thumb $scrollbar-track;
+
+  &::-webkit-scrollbar {
+    width: $scrollbar-size;
+    height: $scrollbar-size;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+
+  &::-webkit-scrollbar-track {
+    background-color: $scrollbar-track;
+    border-radius: $scrollbar-radius;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: $scrollbar-thumb;
+    border-radius: $scrollbar-radius;
+    min-height: 48px;
+  }
+
+  &::-webkit-scrollbar-button {
+    display: none;
+    width: 0;
+    height: 0;
+  }
+
+  &::-webkit-scrollbar-corner {
+    background: transparent;
+  }
+}

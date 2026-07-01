@@ -3,8 +3,7 @@ import { http } from './instance.js';
 import { normalizeQuote } from './normalizers.js';
 
 /**
- * Fetches the quote of the day.
- * @param {{ loader?: string }} [options] - loader target (LOADER.* or container selector)
+ * @param {{ loader?: string }} [options]
  * @returns {Promise<{ author: string, quote: string }>}
  */
 export async function getQuote({ loader } = {}) {

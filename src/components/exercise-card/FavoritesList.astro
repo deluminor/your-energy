@@ -1,5 +1,15 @@
-<div data-component="favorites-list">
-  <div class="placeholder">Favorites list</div>
+<div class="favorites-panel" data-component="favorites-list">
+  <div class="favorites-panel__scroll">
+    <ul class="favorites-list" aria-live="polite"></ul>
+  </div>
+
+  <nav
+    class="pagination"
+    data-favorites-pagination
+    aria-label="Favorites pagination"
+    hidden
+  >
+  </nav>
 </div>
 
 <script>

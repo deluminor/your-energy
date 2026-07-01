@@ -1,7 +1,6 @@
 import { EMAIL_PATTERN } from './constants.js';
 
 /**
- * Validates an email against the API contract pattern.
  * @param {string} value
  * @returns {boolean}
  */
@@ -10,7 +9,6 @@ export function isValidEmail(value) {
 }
 
 /**
- * Trims and collapses a search query; empty -> ''.
  * @param {string} value
  * @returns {string}
  */

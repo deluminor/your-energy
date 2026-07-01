@@ -3,12 +3,11 @@ import { http } from './instance.js';
 import { normalizePaginated } from './normalizers.js';
 
 /**
- * Fetches filter categories (Muscles / Body parts / Equipment).
  * @param {object} params
- * @param {string} params.filter - one of FILTER values
+ * @param {string} params.filter
  * @param {number} [params.page]
  * @param {number} [params.limit]
- * @param {{ loader?: string }} [options] - loader target (LOADER.* or container selector)
+ * @param {{ loader?: string }} [options]
  * @returns {Promise<{ results: object[], totalPages: number, page: number }>}
  */
 export async function getFilters(

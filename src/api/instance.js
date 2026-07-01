@@ -33,7 +33,6 @@ http.interceptors.response.use(
 );
 
 /**
- * Maps a technical Axios error to a safe user-facing message.
  * @param {import('axios').AxiosError} error
  * @returns {string}
  */

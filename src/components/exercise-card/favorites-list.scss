@@ -1,0 +1,62 @@
+@use '../../styles/abstracts' as *;
+
+$favorites-scroll-max-height: 525px;
+
+.favorites-panel {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+
+  &__scroll {
+    overflow-y: auto;
+    max-height: $favorites-scroll-max-height;
+    scrollbar-width: thin;
+    scrollbar-color: $scrollbar-thumb $scrollbar-track;
+    @include custom-scrollbar;
+
+    .favorites-list {
+      padding-right: 12px;
+    }
+  }
+}
+
+.favorites-list {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  @include respond($bp-tablet) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  &__status {
+    grid-column: 1 / -1;
+    margin: 0;
+    list-style: none;
+
+    &--empty {
+      @include flex-center;
+
+      min-height: 141px;
+    }
+
+    &--empty .placeholder {
+      width: 100%;
+      max-width: 555px;
+      margin-inline: auto;
+      min-height: 72px;
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+      color: $color-heading;
+      font-family: $font-primary;
+      font-size: 18px;
+      line-height: 24px;
+      font-weight: $font-weight-regular;
+      text-align: center;
+    }
+  }
+}

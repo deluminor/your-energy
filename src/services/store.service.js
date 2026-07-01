@@ -3,11 +3,11 @@ import { readJSON, writeJSON } from './storage.service.js';
 
 /**
  * @typedef {object} AppState
- * @property {string} activeFilter   Active filter tab (Muscles / Body parts / Equipment).
- * @property {?{ name: string, filter: string }} category  Selected category, or null on the categories view.
- * @property {number} page           Current page of the active list.
- * @property {number} totalPages     Total pages for the active list (not persisted).
- * @property {string} keyword        Search keyword (exercises list only).
+ * @property {string} activeFilter
+ * @property {?{ name: string, filter: string }} category
+ * @property {number} page
+ * @property {number} totalPages
+ * @property {string} keyword
  */
 
 /** @type {AppState} */
@@ -113,25 +113,6 @@ export function setState(patch) {
 }
 
 /**
- * Subscribes to state changes. Returns an unsubscribe fn —
- * ALWAYS call it when tearing down a component (e.g. closing a modal)
- * to avoid leaking listeners.
- *
- * Island teardown contract — every island that subscribes MUST capture the
- * returned fn and call it on teardown. Recommended shape for feature islands:
- *
- * ```js
- * export function initFilters(root) {
- *   if (!root) return () => {};
- *   const stop = subscribe((state) => render(root, state));
- *   // ...wire DOM listeners...
- *   return () => { stop(); }; // also remove any DOM listeners here
- * }
- * ```
- *
- * The island's `.astro` `<script>` invokes the returned teardown on
- * `astro:before-swap` once client navigation is enabled.
- *
  * @param {(state: Readonly<AppState>) => void} listener
  * @returns {() => void}
  */

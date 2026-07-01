@@ -14,6 +14,13 @@ const STAR_ICON = renderSpriteIcon(SPRITE_ICON.STAR, {
   height: 18,
 });
 
+const TRASH_ICON = renderSpriteIcon(SPRITE_ICON.TRASH, {
+  className: 'exercise-card__trash-icon',
+  width: 18,
+  height: 18,
+  stroke: true,
+});
+
 const ARROW_ICON = renderSpriteIcon(SPRITE_ICON.ARROW_UP_RIGHT, {
   className: 'exercise-card__arrow',
   width: 16,
@@ -54,12 +61,79 @@ function renderMetaItem(label, value) {
 }
 
 /**
+ * @param {string} id
+ * @returns {string}
+ */
+function renderStartButton(id) {
+  return `
+    <button
+      type="button"
+      class="exercise-card__start"
+      data-id="${escapeHtml(id)}"
+    >
+      <span>Start</span>
+      ${ARROW_ICON}
+    </button>`;
+}
+
+/**
+ * @param {string} id
+ * @param {unknown} rating
+ * @returns {string}
+ */
+function renderRating(id, rating) {
+  void id;
+
+  return `
+    <span class="exercise-card__rating">
+      <span class="exercise-card__rating-value">${formatRating(rating)}</span>
+      ${STAR_ICON}
+    </span>`;
+}
+
+/**
+ * @param {string} id
+ * @returns {string}
+ */
+function renderRemoveButton(id) {
+  return `
+    <button
+      type="button"
+      class="exercise-card__remove"
+      data-remove-id="${escapeHtml(id)}"
+      aria-label="Remove from favorites"
+    >
+      ${TRASH_ICON}
+    </button>`;
+}
+
+/**
+ * @param {string} id
+ * @param {'catalog' | 'favorite'} variant
+ * @param {unknown} rating
+ * @returns {string}
+ */
+function renderCardTop(id, variant, rating) {
+  const actionMarkup =
+    variant === 'favorite' ? renderRemoveButton(id) : renderRating(id, rating);
+
+  return `
+    <div class="exercise-card__top">
+      ${renderBadge()}
+      ${actionMarkup}
+      ${renderStartButton(id)}
+    </div>`;
+}
+
+/**
  * @param {{ _id?: unknown, name?: unknown, rating?: unknown, burnedCalories?: unknown, bodyPart?: unknown, target?: unknown }} exercise
+ * @param {{ variant?: 'catalog' | 'favorite' }} [options]
  * @returns {string}
  * @example
  * renderExerciseCard({ _id: '1', name: 'Air bike', rating: 4, burnedCalories: 312, bodyPart: 'waist', target: 'abs' });
  */
-export function renderExerciseCard(exercise) {
+export function renderExerciseCard(exercise, options = {}) {
+  const variant = options.variant ?? 'catalog';
   const id = String(exercise._id ?? '');
   const name = String(exercise.name ?? '');
   const bodyPart = String(exercise.bodyPart ?? '');
@@ -67,31 +141,25 @@ export function renderExerciseCard(exercise) {
 
   return `
     <li class="exercise-card">
-      <div class="exercise-card__top">
-        ${renderBadge()}
-        <span class="exercise-card__rating">
-          <span class="exercise-card__rating-value">${formatRating(exercise.rating)}</span>
-          ${STAR_ICON}
-        </span>
-        <button
-          type="button"
-          class="exercise-card__start"
-          data-id="${escapeHtml(id)}"
-        >
-          <span>Start</span>
-          ${ARROW_ICON}
-        </button>
-      </div>
+      ${renderCardTop(id, variant, exercise.rating)}
 
       <div class="exercise-card__title">
         <span class="exercise-card__icon">${RUNNER_ICON}</span>
-        <h3 class="exercise-card__name">${escapeHtml(name)}</h3>
+        <h3 class="exercise-card__name"${name ? ` title="${escapeHtml(name)}"` : ''}>${escapeHtml(name)}</h3>
       </div>
 
       <ul class="exercise-card__meta">
-        ${renderMetaItem('Burned calories:', formatCalories(exercise.burnedCalories))}
+        ${renderMetaItem('Burned cal.:', formatCalories(exercise.burnedCalories))}
         ${renderMetaItem('Body part:', bodyPart)}
         ${renderMetaItem('Target:', target)}
       </ul>
     </li>`;
+}
+
+/**
+ * @param {Parameters<typeof renderExerciseCard>[0]} exercise
+ * @returns {string}
+ */
+export function renderFavoriteExerciseCard(exercise) {
+  return renderExerciseCard(exercise, { variant: 'favorite' });
 }

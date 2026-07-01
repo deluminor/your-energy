@@ -6,7 +6,6 @@
 const listeners = new Map();
 
 /**
- * Subscribes to API-layer UI events (loader, notifications).
  * @param {ApiEventType} type
  * @param {(...args: unknown[]) => void} handler
  * @returns {() => void}

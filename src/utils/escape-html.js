@@ -8,8 +8,6 @@ const ESCAPE_MAP = {
 };
 
 /**
- * Escapes HTML-special characters in a string before interpolating it into
- * template-literal markup. Use for ANY API- or user-provided value to prevent XSS.
  * @param {unknown} value
  * @returns {string}
  */

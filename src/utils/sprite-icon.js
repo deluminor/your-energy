@@ -3,12 +3,14 @@ export const SPRITE_ICON = {
   CHEVRON_RIGHT: 'icon-chevron-right',
   RUNNING: 'icon-running',
   STAR: 'icon-star',
+  TRASH: 'icon-trash',
+  CLOSE: 'icon-close',
   ARROW_UP_RIGHT: 'icon-arrow-up-right',
   SEARCH: 'icon-search',
 };
 
 /**
- * @param {string} iconId - Symbol id, e.g. `icon-star`
+ * @param {string} iconId
  * @param {{
  *   className?: string;
  *   width?: number | string;
@@ -18,7 +20,6 @@ export const SPRITE_ICON = {
  * }} [options]
  * @returns {string}
  * @example
- * renderSpriteIcon(SPRITE_ICON.STAR, { className: 'card__star', width: 18, height: 18 });
  */
 export function renderSpriteIcon(iconId, options = {}) {
   const {
