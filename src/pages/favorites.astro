@@ -20,7 +20,9 @@ const description = 'Your favorite exercises from the Your Energy catalog.';
             <DailyNorm />
           </aside>
 
-          <FavoritesList />
+          <div class="favorites__content">
+            <FavoritesList />
+          </div>
         </div>
       </div>
     </section>
@@ -48,6 +50,12 @@ const description = 'Your favorite exercises from the Your Energy catalog.';
       display: flex;
       flex-direction: column;
       gap: 20px;
+    }
+
+    &__content {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
     }
   }
 </style>
