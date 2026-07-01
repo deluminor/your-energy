@@ -9,6 +9,10 @@
   padding: 0;
   list-style: none;
 
+  &[hidden] {
+    display: none;
+  }
+
   @include respond($bp-tablet) {
     grid-template-columns: repeat(3, 1fr);
     column-gap: 15px;
