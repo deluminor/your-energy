@@ -3,39 +3,58 @@
     <div class="footer__top">
       <div class="footer__brand">
         <a class="footer__logo" href="/" aria-label="Go to home page">
-          YOUR ENERGY
+          <svg class="footer__logo-icon" width="132" height="24">
+            <use href="/sprite.svg#icon-logo"></use>
+          </svg>
         </a>
 
         <ul class="footer__socials" aria-label="Social links">
-          <li>
+          <li class="footer__social-item">
             <a
               class="footer__social-link"
               href="https://www.facebook.com/goITclub/"
               target="_blank"
-              rel="noopener noreferrer">Facebook</a
+              rel="noopener noreferrer"
+              aria-label="Facebook"
             >
+              <svg class="footer__social-icon" width="28" height="28">
+                <use href="/sprite.svg#icon-facebook"></use>
+              </svg>
+            </a>
           </li>
-          <li>
+
+          <li class="footer__social-item">
             <a
               class="footer__social-link"
               href="https://www.instagram.com/goitclub/"
               target="_blank"
-              rel="noopener noreferrer">Instagram</a
+              rel="noopener noreferrer"
+              aria-label="Instagram"
             >
+              <svg class="footer__social-icon" width="28" height="28">
+                <use href="/sprite.svg#icon-instagram"></use>
+              </svg>
+            </a>
           </li>
-          <li>
+
+          <li class="footer__social-item">
             <a
               class="footer__social-link"
               href="https://www.youtube.com/c/GoIT"
               target="_blank"
-              rel="noopener noreferrer">YouTube</a
+              rel="noopener noreferrer"
+              aria-label="YouTube"
             >
+              <svg class="footer__social-icon" width="28" height="28">
+                <use href="/sprite.svg#icon-youtube"></use>
+              </svg>
+            </a>
           </li>
         </ul>
       </div>
 
       <h2 class="footer__title">
-        Transforming your <em>body</em> shape with us
+        Transforming your <em class="footer__title-accent">body</em> shape with us
       </h2>
 
       <div class="footer__subscribe">
@@ -44,7 +63,7 @@
         </p>
 
         <form class="footer__form" data-footer-form novalidate>
-          <label for="footer-email" class="visually-hidden">Email</label>
+          <label class="visually-hidden" for="footer-email">Email</label>
 
           <input
             class="footer__input"
@@ -53,7 +72,7 @@
             type="email"
             placeholder="Email"
             required
-            pattern="^\w+(\.\w+)?@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$"
+            pattern="^[^\s@]+@[^\s@]+\.[^\s@]+$"
           />
 
           <button class="footer__button" type="submit">Send</button>
@@ -74,3 +93,9 @@
     </div>
   </div>
 </footer>
+
+<script>
+  import { initFooter } from './footer.client.js';
+
+  initFooter(document.querySelector('[data-component="footer"]'));
+</script>
