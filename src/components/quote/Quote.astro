@@ -39,6 +39,7 @@
 
 <script>
   import { getQuote } from '../../api/quote.api.js';
+  import { readJSON, writeJSON } from '../../services/storage.service.js';
 
   const STORAGE_KEY = 'quoteOfTheDay';
 
@@ -56,26 +57,18 @@
     if (!textEl || !authorEl) return;
 
     const today = getTodayKey();
-    const cachedRaw = localStorage.getItem(STORAGE_KEY);
+    const cached = readJSON(STORAGE_KEY, null);
 
-    if (cachedRaw) {
-      try {
-        const cached = JSON.parse(cachedRaw);
-        if (cached.date === today) {
-          textEl.textContent = cached.quote;
-          authorEl.textContent = cached.author;
-          return;
-        }
-      } catch {}
+    if (cached && cached.date === today) {
+      textEl.textContent = cached.quote;
+      authorEl.textContent = cached.author;
+      return;
     }
 
     const { quote, author } = await getQuote();
     textEl.textContent = quote;
     authorEl.textContent = author;
-    localStorage.setItem(
-      STORAGE_KEY,
-      JSON.stringify({ date: today, quote, author }),
-    );
+    writeJSON(STORAGE_KEY, { date: today, quote, author });
   }
 
   renderQuote();
