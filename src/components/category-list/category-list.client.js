@@ -1,73 +1,20 @@
 import { getFilters } from '../../api/filters.api.js';
-import { getState, setState, subscribe } from '../../services/store.service.js';
+import { getState, setState } from '../../services/store.service.js';
 import { LOADER } from '../../utils/constants.js';
-import { escapeHtml } from '../../utils/escape-html.js';
 import { renderCategoryCard } from '../category-card/render-category-card.js';
+import { createListStatus } from '../shared/list-status.js';
+import { bindStoreIsland } from '../shared/store-island.js';
 
-const REFRESH_CLASS = 'category-list__refresh';
+const BLOCK = 'category-list';
+const status = createListStatus(BLOCK);
 
 /** @type {string | null} */
 let inflightKey = null;
 
 /**
+ * @typedef {import('../../services/store.service.js').AppState} AppState
  * @typedef {{ name?: unknown, filter?: unknown, imgURL?: unknown }} CategoryItem
  */
-
-/**
- * @param {HTMLElement} root
- */
-function showRefreshing(root) {
-  root.classList.add('category-list--refreshing');
-  root.setAttribute('aria-busy', 'true');
-
-  if (root.querySelector(`.${REFRESH_CLASS}`)) return;
-
-  const refresh = document.createElement('li');
-
-  refresh.className = REFRESH_CLASS;
-  refresh.setAttribute('aria-hidden', 'true');
-  refresh.innerHTML =
-    '<span class="loader__spinner" aria-hidden="true"></span>';
-
-  root.append(refresh);
-}
-
-/**
- * @param {HTMLElement} root
- */
-function hideRefreshing(root) {
-  root.classList.remove('category-list--refreshing');
-  root.removeAttribute('aria-busy');
-  root.querySelector(`.${REFRESH_CLASS}`)?.remove();
-}
-
-/**
- * @param {HTMLElement} root
- */
-function renderLoading(root) {
-  hideRefreshing(root);
-
-  root.innerHTML = `
-    <li class="category-list__status category-list__status--loading">
-      <span class="loader__spinner" aria-hidden="true"></span>
-      <span class="visually-hidden">Loading categories…</span>
-    </li>`;
-
-  root.setAttribute('aria-busy', 'true');
-}
-
-/**
- * @param {HTMLElement} root
- * @param {string} message
- */
-function renderEmpty(root, message) {
-  hideRefreshing(root);
-
-  root.innerHTML = `
-    <li class="category-list__status category-list__status--empty">
-      <div class="placeholder">${escapeHtml(message)}</div>
-    </li>`;
-}
 
 /**
  * @param {HTMLElement} root
@@ -75,10 +22,10 @@ function renderEmpty(root, message) {
  * @param {string} caption
  */
 function render(root, items, caption) {
-  hideRefreshing(root);
+  status.hideRefreshing(root);
 
   if (!items.length) {
-    renderEmpty(root, 'No categories found.');
+    status.renderEmpty(root, 'No categories found.');
     return;
   }
 
@@ -114,9 +61,9 @@ async function loadCategories(root) {
   const hasCards = Boolean(root.querySelector('.category-card'));
 
   if (hasCards) {
-    showRefreshing(root);
+    status.showRefreshing(root);
   } else {
-    renderLoading(root);
+    status.renderLoading(root, 'Loading categories…');
   }
 
   try {
@@ -136,26 +83,18 @@ async function loadCategories(root) {
 
     render(root, results, current.activeFilter);
 
-    const patch = /** @type {Record<string, number>} */ ({});
+    /** @type {Partial<AppState>} */
+    const patch = {};
 
-    if (current.totalPages !== totalPages) {
-      patch.totalPages = totalPages;
-    }
+    if (current.totalPages !== totalPages) patch.totalPages = totalPages;
+    if (current.page !== responsePage) patch.page = responsePage;
 
-    if (current.page !== responsePage) {
-      patch.page = responsePage;
-    }
-
-    if (Object.keys(patch).length > 0) {
-      setState(patch);
-    }
+    if (Object.keys(patch).length > 0) setState(patch);
   } catch (error) {
     console.error('category-list: failed to load categories', error);
-    renderEmpty(root, 'Failed to load categories.');
+    status.renderEmpty(root, 'Failed to load categories.');
   } finally {
-    if (inflightKey === requestKey) {
-      inflightKey = null;
-    }
+    if (inflightKey === requestKey) inflightKey = null;
   }
 }
 
@@ -169,7 +108,7 @@ export function initCategoryList(root) {
   /** @type {string} */
   let lastKey = '';
 
-  const onClick = (/** @type {MouseEvent} */ event) => {
+  const onClick = (/** @type {Event} */ event) => {
     const target = /** @type {HTMLElement} */ (event.target);
     const card = target.closest('.category-card');
 
@@ -180,26 +119,26 @@ export function initCategoryList(root) {
 
     if (!name || !filter) return;
 
-    setState({ category: { name, filter } });
+    setState({ category: { name, filter }, page: 1, keyword: '' });
   };
 
-  const stop = subscribe((state) => {
+  const sync = (/** @type {Readonly<AppState>} */ state) => {
+    const isCategoriesView = state.category === null;
+
+    root.hidden = !isCategoriesView;
+
+    if (!isCategoriesView) {
+      lastKey = '';
+      return;
+    }
+
     const key = `${state.activeFilter}:${state.page}`;
 
     if (key === lastKey) return;
 
     lastKey = key;
     loadCategories(root);
-  });
-
-  const initialKey = `${getState().activeFilter}:${getState().page}`;
-  lastKey = initialKey;
-  loadCategories(root);
-
-  root.addEventListener('click', onClick);
-
-  return () => {
-    stop();
-    root.removeEventListener('click', onClick);
   };
+
+  return bindStoreIsland(sync, { root, listeners: [['click', onClick]] });
 }

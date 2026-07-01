@@ -1,5 +1,6 @@
-import { getState, setState, subscribe } from '../../services/store.service.js';
+import { getState, setState } from '../../services/store.service.js';
 import { escapeHtml } from '../../utils/escape-html.js';
+import { bindStoreIsland } from '../shared/store-island.js';
 import {
   renderChevronIcon,
   renderDoubleChevronIcon,
@@ -162,7 +163,7 @@ function resolveActionPage(action, page, totalPages) {
 export function initPagination(root) {
   if (!root) return () => {};
 
-  const onClick = (/** @type {MouseEvent} */ event) => {
+  const onClick = (/** @type {Event} */ event) => {
     const target = /** @type {HTMLElement} */ (event.target);
     const control = target.closest('[data-page], [data-action]');
 
@@ -195,13 +196,9 @@ export function initPagination(root) {
     setState({ page: nextPage });
   };
 
-  const stop = subscribe((state) => render(root, state));
+  const sync = (
+    /** @type {import('../../services/store.service.js').AppState} */ state,
+  ) => render(root, state);
 
-  render(root, getState());
-  root.addEventListener('click', onClick);
-
-  return () => {
-    stop();
-    root.removeEventListener('click', onClick);
-  };
+  return bindStoreIsland(sync, { root, listeners: [['click', onClick]] });
 }

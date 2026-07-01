@@ -1,1 +1,14 @@
 @use '../../../styles/abstracts' as *;
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 8px;
+  border: 1px solid $color-heading;
+  border-radius: 15px;
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: $font-weight-medium;
+  color: $color-heading;
+  white-space: nowrap;
+}

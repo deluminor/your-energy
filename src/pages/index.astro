@@ -1,10 +1,13 @@
 ---
+import Breadcrumb from '../components/breadcrumb/Breadcrumb.astro';
 import CategoryList from '../components/category-list/CategoryList.astro';
 import DailyNorm from '../components/daily-norm/DailyNorm.astro';
+import ExerciseList from '../components/exercise-list/ExerciseList.astro';
 import Filters from '../components/filters/Filters.astro';
 import Hero from '../components/hero/Hero.astro';
 import Pagination from '../components/pagination/Pagination.astro';
 import Quote from '../components/quote/Quote.astro';
+import Search from '../components/search/Search.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
 
 const title = 'Your Energy';
@@ -21,8 +24,11 @@ const description =
     <section class="exercises">
       <div class="container">
         <div class="exercises__head">
-          <h2 class="section-title exercises__title">Exercises</h2>
-          <Filters />
+          <Breadcrumb />
+          <div class="exercises__controls">
+            <Search />
+            <Filters />
+          </div>
         </div>
 
         <div class="exercises__layout">
@@ -33,6 +39,7 @@ const description =
 
           <div class="exercises__content">
             <CategoryList />
+            <ExerciseList />
             <Pagination />
           </div>
         </div>
@@ -59,6 +66,24 @@ const description =
         justify-content: space-between;
         align-items: center;
         gap: 24px;
+      }
+    }
+
+    &__controls {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      width: 100%;
+
+      @include respond($bp-tablet) {
+        flex-direction: row;
+        align-items: center;
+        gap: 24px;
+      }
+
+      @include respond($bp-desktop) {
+        width: auto;
+        justify-content: flex-end;
       }
     }
 

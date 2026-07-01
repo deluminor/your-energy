@@ -1,6 +1,7 @@
-import { getState, setState, subscribe } from '../../services/store.service.js';
+import { getState, setState } from '../../services/store.service.js';
 import { FILTER } from '../../utils/constants.js';
 import { escapeHtml } from '../../utils/escape-html.js';
+import { bindStoreIsland } from '../shared/store-island.js';
 
 const FILTER_TABS = [FILTER.MUSCLES, FILTER.BODY_PARTS, FILTER.EQUIPMENT];
 
@@ -50,7 +51,7 @@ function selectFilter(filter) {
 export function initFilters(root) {
   if (!root) return () => {};
 
-  const onClick = (/** @type {MouseEvent} */ event) => {
+  const onClick = (/** @type {Event} */ event) => {
     const target = /** @type {HTMLElement} */ (event.target);
     const tab = target.closest('[data-filter]');
 
@@ -59,13 +60,9 @@ export function initFilters(root) {
     selectFilter(tab.getAttribute('data-filter') ?? '');
   };
 
-  const stop = subscribe((state) => render(root, state.activeFilter));
+  const sync = (
+    /** @type {import('../../services/store.service.js').AppState} */ state,
+  ) => render(root, state.activeFilter);
 
-  render(root, getState().activeFilter);
-  root.addEventListener('click', onClick);
-
-  return () => {
-    stop();
-    root.removeEventListener('click', onClick);
-  };
+  return bindStoreIsland(sync, { root, listeners: [['click', onClick]] });
 }

@@ -1,1 +1,110 @@
 @use '../../styles/abstracts' as *;
+
+.exercise-card {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 20px 16px;
+  background-color: $color-white;
+  border-radius: 15px;
+
+  &__top {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  &__rating {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    font-size: 12px;
+    line-height: 18px;
+    color: $color-heading;
+  }
+
+  &__star {
+    color: $color-star;
+  }
+
+  &__start {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: auto;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    font-family: inherit;
+    font-size: 16px;
+    line-height: 24px;
+    color: $color-heading;
+    cursor: pointer;
+    transition: gap $transition;
+
+    &:hover {
+      gap: 12px;
+    }
+
+    &:focus-visible {
+      outline: 2px solid $color-accent;
+      outline-offset: 2px;
+      border-radius: 4px;
+    }
+  }
+
+  &__title {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  &__icon {
+    @include flex-center;
+
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background-color: $color-heading;
+    color: $color-on-media;
+  }
+
+  &__icon-glyph {
+    width: 14px;
+    height: 14px;
+  }
+
+  &__name {
+    font-size: 24px;
+    line-height: 32px;
+    font-weight: $font-weight-regular;
+    color: $color-heading;
+    text-transform: capitalize;
+  }
+
+  &__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  &__meta-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    line-height: 18px;
+  }
+
+  &__meta-label {
+    color: $color-label-muted;
+  }
+
+  &__meta-value {
+    color: $color-heading;
+  }
+}

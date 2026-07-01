@@ -1,0 +1,13 @@
+<ul
+  class="exercise-list"
+  data-component="exercise-list"
+  aria-live="polite"
+  hidden
+>
+</ul>
+
+<script>
+  import { initExerciseList } from './exercise-list.client.js';
+
+  initExerciseList(document.querySelector('[data-component="exercise-list"]'));
+</script>
