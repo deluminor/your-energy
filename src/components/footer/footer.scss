@@ -1,1 +1,65 @@
 @use '../../styles/abstracts' as *;
+
+.footer {
+  background-color: $color-text;
+  color: $color-white;
+}
+
+.footer__container {
+  padding-top: rem(64);
+  padding-bottom: rem(32);
+}
+
+.footer__top {
+  display: grid;
+  grid-template-columns: rem(132);
+  column-gap: rem(182);
+}
+
+.footer__brand {
+  display: flex;
+  flex-direction: column;
+  gap: rem(32);
+}
+
+.footer__logo {
+  color: currentColor;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.footer__socials {
+  display: flex;
+  gap: rem(12);
+}
+
+.footer__title {
+  max-width: rem(595);
+  font-size: rem(56);
+  line-height: 1.07;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+}
+
+.footer__title em {
+  font-style: italic;
+}
+
+.footer__subscribe {
+  display: flex;
+  flex-direction: column;
+  gap: rem(20);
+}
+
+.footer__form {
+  display: flex;
+  flex-direction: column;
+  gap: rem(12);
+}
+
+.footer__bottom {
+  display: flex;
+  flex-direction: column;
+  gap: rem(10);
+  margin-top: rem(80);
+}
