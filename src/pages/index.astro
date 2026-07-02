@@ -9,6 +9,7 @@ import Pagination from '../components/pagination/Pagination.astro';
 import Quote from '../components/quote/Quote.astro';
 import Search from '../components/search/Search.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import PhotoCard from '../components/photo-card/PhotoCard.astro';
 
 const title = 'Your Energy';
 const description =
@@ -33,8 +34,15 @@ const description =
 
         <div class="exercises__layout">
           <aside class="exercises__aside">
-            <Quote />
-            <DailyNorm />
+            <div class="exercises__aside-quote">
+              <Quote />
+            </div>
+            <div class="exercises__aside-photo">
+              <PhotoCard />
+            </div>
+            <div class="exercises__aside-norm">
+              <DailyNorm />
+            </div>
           </aside>
 
           <div class="exercises__content">
@@ -109,23 +117,90 @@ const description =
       display: flex;
       flex-direction: column;
       gap: 20px;
+      width: 100%;
+
+      // ==========================================
+      // ЗОНА МОБІЛКИ
+      // ==========================================
+      &-quote,
+      &-norm,
+      &-photo {
+        grid-column: unset;
+        grid-row: unset;
+        width: 100%;
+      }
+
+      &-photo {
+        width: 100%; // було: max-width: 335px; height: 242px; margin-inline: auto;
+        margin-inline: auto;
+        display: block;
+        flex-shrink: 0;
+      }
+
+      // ==========================================
+      // ЗОНА ПЛАНШЕТА
+      // ==========================================
+      @include respond($bp-tablet) {
+        display: grid;
+        grid-template-columns: 1fr 288px;
+        grid-template-rows: 249px auto;
+        gap: 20px;
+        align-items: stretch;
+
+        &-quote {
+          grid-column: 1;
+          grid-row: 1;
+          width: 100%;
+          height: 100%;
+
+          :global(> *) {
+            height: 100%;
+          }
+        }
+
+        &-photo {
+          grid-column: 2;
+          grid-row: 1;
+          max-width: 288px;
+          height: 100%;
+          margin-inline: unset;
+        }
+
+        &-norm {
+          grid-column: 1;
+          grid-row: 2;
+          width: 100%;
+          align-self: start;
+        }
+      }
+
+      // ==========================================
+      // ЗОНА ДЕСКТОПА ($bp-desktop)
+      // ==========================================
+      @include respond($bp-desktop) {
+        order: unset;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+
+        &-quote,
+        &-norm,
+        &-photo {
+          grid-column: unset !important;
+          grid-row: unset !important;
+          width: 100% !important;
+          height: auto !important;
+          max-width: unset !important;
+        }
+      }
     }
 
     &__content {
       order: 1;
       display: flex;
       flex-direction: column;
-    }
 
-    @include respond($bp-tablet) {
-      &__aside {
-        gap: 20px;
-      }
-    }
-
-    @include respond($bp-desktop) {
-      &__aside,
-      &__content {
+      @include respond($bp-desktop) {
         order: unset;
       }
     }
