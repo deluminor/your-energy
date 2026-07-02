@@ -9,6 +9,7 @@ const STORE_PATH = '../../src/services/store.service.js';
  */
 async function loadStore(persisted) {
   localStorage.clear();
+  window.history.replaceState(null, '', '/');
 
   if (persisted) {
     localStorage.setItem(STORAGE_KEYS.UI_STATE, JSON.stringify(persisted));
@@ -32,6 +33,15 @@ describe('store.service', () => {
     expect(state.category).toBeNull();
     expect(state.totalPages).toBe(1);
     expect(state.keyword).toBe('');
+  });
+
+  it('syncs default persisted state to URL when storage is empty', async () => {
+    await loadStore(null);
+
+    const params = new URLSearchParams(window.location.search);
+
+    expect(params.get('filter')).toBe('muscles');
+    expect(params.get('page')).toBe('1');
   });
 
   it('hydrates persisted keys from localStorage', async () => {
@@ -87,7 +97,10 @@ describe('store.service', () => {
 
     setState({ totalPages: 9 });
 
-    expect(localStorage.getItem(STORAGE_KEYS.UI_STATE)).toBeNull();
+    const raw = localStorage.getItem(STORAGE_KEYS.UI_STATE);
+    expect(JSON.parse(/** @type {string} */ (raw))).not.toHaveProperty(
+      'totalPages',
+    );
   });
 
   it('notifies subscribers with the new frozen state', async () => {
