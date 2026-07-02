@@ -1,5 +1,6 @@
 import { DEFAULT_FILTER, STORAGE_KEYS } from '../utils/constants.js';
 import { readJSON, writeJSON } from './storage.service.js';
+import { listenUiStateUrlChanges } from './url-state.service.js';
 
 /**
  * @typedef {object} AppState
@@ -53,7 +54,10 @@ function shouldPersist(patch) {
 function hydrateFromStorage() {
   const saved = readJSON(STORAGE_KEYS.UI_STATE, null);
 
-  if (!saved || typeof saved !== 'object') return;
+  if (!saved || typeof saved !== 'object') {
+    persistState();
+    return;
+  }
 
   const record = /** @type {Record<string, unknown>} */ (saved);
 
@@ -120,3 +124,5 @@ export function subscribe(listener) {
   listeners.add(listener);
   return () => listeners.delete(listener);
 }
+
+listenUiStateUrlChanges((urlState) => setState(urlState));
