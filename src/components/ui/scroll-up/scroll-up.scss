@@ -1,26 +1,70 @@
 @use '../../../styles/abstracts' as *;
 
 .scroll-up {
+  @include flex-center;
+
   position: fixed;
-  right: 24px;
-  bottom: 24px;
+  right: rem(30);
+  bottom: rem(20);
   z-index: 800;
-  display: grid;
-  place-items: center;
-  width: 48px;
-  height: 48px;
-  font-size: 24px;
-  color: $color-white;
-  background-color: $color-text;
+  width: rem($scroll-up-size-mobile);
+  height: rem($scroll-up-size-mobile);
+  border: none;
+  outline: none;
   border-radius: 50%;
+  background-color: $scroll-up-bg;
+  color: $scroll-up-icon;
+  cursor: pointer;
   opacity: 0;
   visibility: hidden;
+  pointer-events: none;
+  transform: translateY(rem($scroll-up-offset)) scale(0.92);
   transition:
-    opacity 0.2s ease,
-    visibility 0.2s ease;
+    opacity $scroll-up-duration $scroll-up-ease,
+    visibility $scroll-up-duration $scroll-up-ease,
+    transform $scroll-up-duration $scroll-up-ease;
+
+  @include respond($bp-tablet) {
+    width: rem($scroll-up-size-tablet-up);
+    height: rem($scroll-up-size-tablet-up);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition-duration: 0.01ms;
+    transform: none;
+  }
+
+  &__icon {
+    display: block;
+    flex-shrink: 0;
+    width: rem(22);
+    height: rem(22);
+    fill: $scroll-up-icon;
+
+    @include respond($bp-tablet) {
+      width: rem(28);
+      height: rem(28);
+    }
+  }
+
+  &--visible:hover {
+    opacity: 0.9;
+    transform: translateY(0) scale(1.05);
+  }
+
+  &:focus-visible {
+    outline: 2px solid $scroll-up-icon;
+    outline-offset: 2px;
+  }
 
   &--visible {
     opacity: 1;
     visibility: visible;
+    pointer-events: auto;
+    transform: translateY(0) scale(1);
+
+    @media (prefers-reduced-motion: reduce) {
+      transform: none;
+    }
   }
 }

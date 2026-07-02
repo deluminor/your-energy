@@ -1,6 +1,62 @@
 <section class="hero">
   <div class="container" data-component="hero">
-    <div class="placeholder">Hero</div>
+    <div class="hero-header">
+      <div class="hero-left">
+        <h1 class="hero-title">
+          <span class="hero-icon">
+            <svg>
+              <use href="/sprite.svg#icon-sun"></use>
+            </svg>
+          </span>
+          Get <span class="hero-title-italic">Body</span> in shape, Stay healthy
+        </h1>
+        <p class="hero-description">
+          Transform your physique and embrace a healthier lifestyle with our
+          comprehensive fitness and nutrition support.
+        </p>
+      </div>
+    </div>
+
+    <div class="hero-main-img-container">
+      <picture>
+        <source
+          media="(max-width: 767px)"
+          srcset="/images/women-sportswear-working-out-outdoors-mob@1x.webp 1x, /images/women-sportswear-working-out-outdoors-mob@2x.webp 2x"
+        />
+        <source
+          media="(min-width: 768px) and (max-width: 1157px)"
+          srcset="/images/women-sportswear-working-out-outdoors-tab@1x.webp 1x, /images/women-sportswear-working-out-outdoors-tab@2x.webp 2x"
+        />
+        <source
+          media="(min-width: 1376px)"
+          srcset="/images/women-sportswear-working-out-outdoors-desk@1x.webp 1x, /images/women-sportswear-working-out-outdoors-desk@2x.webp 2x"
+        />
+        <img
+          class="hero-main-img"
+          src="/images/women-sportswear-working-out-outdoors-desk@1x.webp"
+          alt="Women sport"
+          width="1376"
+          height="350"
+        />
+      </picture>
+    </div>
+
+    <div class="hero-right">
+      <div class="hero-mini-img-container">
+        <img
+          class="hero-mini-img"
+          src="/images/young-women-doing-fitness-outdoors-together-desk@1x.webp"
+          alt="Young women"
+          srcset="/images/young-women-doing-fitness-outdoors-together-desk@1x.webp 1x, /images/young-women-doing-fitness-outdoors-together-desk@2x.webp 2x"
+        />
+      </div>
+      <div class="hero-tags-container">
+        <span class="hero-tag">#Sport</span>
+        <span class="hero-tag">#Healthy</span>
+        <span class="hero-tag">#Workout</span>
+        <span class="hero-tag">#Diet</span>
+      </div>
+    </div>
   </div>
 </section>
 

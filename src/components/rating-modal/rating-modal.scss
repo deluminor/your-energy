@@ -1,1 +1,130 @@
 @use '../../styles/abstracts' as *;
+
+// Dark surface for the rating modal (scoped via the shell's `data-modal` hook,
+// so the shared white modal shell is untouched for other modals).
+.modal[data-modal='rating'] {
+  .modal__dialog {
+    width: min(430px, 92vw);
+    padding: 40px;
+    color: $color-on-media;
+    background-color: $color-text;
+  }
+
+  .modal__close {
+    color: $color-on-media;
+  }
+}
+
+.rating-modal {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  &__label {
+    color: $color-on-media-muted;
+    font-size: 14px;
+    line-height: 1.3;
+  }
+
+  &__rating {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 8px;
+  }
+
+  &__value {
+    font-size: 18px;
+    font-weight: $font-weight-medium;
+    color: $color-on-media;
+  }
+
+  &__stars {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+    gap: 8px;
+    padding: 0;
+    margin: 0;
+    border: 0;
+  }
+
+  &__star {
+    cursor: pointer;
+    line-height: 0;
+    color: $color-on-media-muted;
+    transition: color $transition;
+  }
+
+  &__star-icon {
+    width: 24px;
+    height: 24px;
+  }
+
+  // Hover preview: fill the hovered star and every star to its left.
+  &__stars:hover .rating-modal__star:hover,
+  &__stars:hover .rating-modal__star:hover ~ .rating-modal__star {
+    color: $color-star;
+  }
+
+  // Selected value: the checked radio lights its own star and all lower ones.
+  &__radio:checked ~ .rating-modal__star {
+    color: $color-star;
+  }
+
+  &__radio:focus-visible + .rating-modal__star {
+    outline: 2px solid $color-accent;
+    outline-offset: 2px;
+    border-radius: $radius-sm;
+  }
+
+  &__input {
+    width: 100%;
+    padding: 16px 24px;
+    color: $color-on-media;
+    background-color: transparent;
+    border: 1px solid $color-on-media;
+    border-radius: 30px;
+    transition: border-color $transition;
+
+    &::placeholder {
+      color: $color-on-media-muted;
+    }
+
+    &:hover,
+    &:focus-visible {
+      border-color: $color-on-media;
+      outline: none;
+    }
+  }
+
+  &__textarea {
+    min-height: 130px;
+    border-radius: 15px;
+    resize: none;
+    @include custom-scrollbar;
+  }
+
+  &__send {
+    margin-top: 8px;
+    padding: 16px;
+    color: $color-heading;
+    background-color: $color-white;
+    border-radius: $radius-md;
+    font-size: 16px;
+    font-weight: $font-weight-medium;
+    transition: opacity $transition;
+
+    &:hover,
+    &:focus-visible {
+      opacity: 0.85;
+    }
+
+    // The shared `.button--loading` spinner is white; recolor it dark so it
+    // stays visible on the light Send button.
+    &.button--loading::after {
+      border-color: rgba($color-heading, 0.35);
+      border-top-color: $color-heading;
+    }
+  }
+}

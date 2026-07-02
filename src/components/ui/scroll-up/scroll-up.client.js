@@ -10,7 +10,11 @@ export function initScrollUp(root) {
   if (!root) return;
 
   const toggleVisibility = () => {
-    root.classList.toggle(VISIBLE_CLASS, window.scrollY > SHOW_AFTER_PX);
+    const isVisible = window.scrollY > SHOW_AFTER_PX;
+
+    root.classList.toggle(VISIBLE_CLASS, isVisible);
+    root.setAttribute('aria-hidden', String(!isVisible));
+    root.tabIndex = isVisible ? 0 : -1;
   };
 
   root.addEventListener('click', () => {
