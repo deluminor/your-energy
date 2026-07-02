@@ -1,56 +1,70 @@
 @use '../../../styles/abstracts' as *;
 
 .scroll-up {
-  display: none;
+  @include flex-center;
+
   position: fixed;
-  right: 30px;
-  bottom: 20px;
+  right: rem(30);
+  bottom: rem(20);
   z-index: 800;
+  width: rem($scroll-up-size-mobile);
+  height: rem($scroll-up-size-mobile);
   border: none;
   outline: none;
-  background-color: $color-accent;
-  cursor: pointer;
   border-radius: 50%;
-
+  background-color: $scroll-up-bg;
+  color: $scroll-up-icon;
+  cursor: pointer;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(rem($scroll-up-offset)) scale(0.92);
   transition:
-    opacity $transition,
-    background-color $transition,
-    transform $transition;
-
-  width: 50px;
-  height: 50px;
+    opacity $scroll-up-duration $scroll-up-ease,
+    visibility $scroll-up-duration $scroll-up-ease,
+    transform $scroll-up-duration $scroll-up-ease;
 
   @include respond($bp-tablet) {
-    width: 60px;
-    height: 60px;
+    width: rem($scroll-up-size-tablet-up);
+    height: rem($scroll-up-size-tablet-up);
   }
 
-  @include respond($bp-desktop) {
-    width: 64px;
-    height: 64px;
+  @media (prefers-reduced-motion: reduce) {
+    transition-duration: 0.01ms;
+    transform: none;
   }
 
-  svg {
-    width: 24px;
-    height: 24px;
-    fill: $color-white;
-    stroke: $color-white;
-    transition: fill $transition;
+  &__icon {
+    display: block;
+    flex-shrink: 0;
+    width: rem(22);
+    height: rem(22);
+    fill: $scroll-up-icon;
 
     @include respond($bp-tablet) {
-      width: 28px;
-      height: 28px;
+      width: rem(28);
+      height: rem(28);
     }
   }
 
-  &:hover {
+  &--visible:hover {
     opacity: 0.9;
-    transform: scale(1.05);
+    transform: translateY(0) scale(1.05);
+  }
+
+  &:focus-visible {
+    outline: 2px solid $scroll-up-icon;
+    outline-offset: 2px;
   }
 
   &--visible {
-    display: flex !important;
-    align-items: center;
-    justify-content: center;
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateY(0) scale(1);
+
+    @media (prefers-reduced-motion: reduce) {
+      transform: none;
+    }
   }
 }
