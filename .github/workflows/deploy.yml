@@ -16,6 +16,11 @@ concurrency:
   group: pages
   cancel-in-progress: false
 
+# Node 20 actions are deprecated on GitHub-hosted runners (default is Node 24 since 2026-06-16).
+# https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
   build:
     name: Build
@@ -36,10 +41,11 @@ jobs:
     name: Deploy
     needs: build
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
