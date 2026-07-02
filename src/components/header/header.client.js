@@ -12,6 +12,9 @@ export function initHeader(root) {
   const closeBtn = root.querySelector('[data-menu-close]');
   if (!menu || !openBtn) return;
 
+  /**
+   * @param {boolean} isLocked
+   */
   const setScrollLock = (isLocked) => {
     const scrollbarWidth =
       window.innerWidth - document.documentElement.clientWidth;
@@ -43,7 +46,9 @@ export function initHeader(root) {
   closeBtn?.addEventListener('click', close);
 
   menu.addEventListener('click', (event) => {
-    if (event.target.closest('a')) close();
+    const target = event.target;
+
+    if (target instanceof Element && target.closest('a')) close();
   });
 
   document.addEventListener('keydown', (event) => {
