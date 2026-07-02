@@ -18,7 +18,7 @@ const { title, description, ogImage = 'og-image.svg' } = Astro.props;
 
 const canonicalUrl = new URL(Astro.url.pathname, Astro.site).href;
 const ogImageUrl = new URL(withBase(ogImage), Astro.site).href;
-const faviconHref = withBase('favicon.svg');
+const faviconHref = `${withBase('favicon.svg')}?v=2`;
 const sitemapHref = withBase('sitemap-index.xml');
 
 const websiteSchema = {
