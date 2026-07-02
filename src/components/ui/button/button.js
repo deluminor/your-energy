@@ -12,9 +12,14 @@ export function renderButton({ label = 'Button', type = 'button' } = {}) {
  * Toggles a button's loading state: disables it and shows an inline spinner.
  * @param {HTMLButtonElement} button
  * @param {boolean} isLoading
+ * @param {string} [loadingClass='button--loading']
  */
-export function setButtonLoading(button, isLoading) {
-  button.classList.toggle('button--loading', isLoading);
+export function setButtonLoading(
+  button,
+  isLoading,
+  loadingClass = 'button--loading',
+) {
+  button.classList.toggle(loadingClass, isLoading);
   button.disabled = isLoading;
   button.setAttribute('aria-busy', String(isLoading));
 }

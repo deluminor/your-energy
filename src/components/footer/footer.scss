@@ -107,6 +107,26 @@
     background-color: $color-on-media;
     border: none;
     cursor: pointer;
+
+    &--loading {
+      position: relative;
+      color: transparent !important;
+      pointer-events: none;
+
+      &::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 18px;
+        height: 18px;
+        margin: -9px 0 0 -9px;
+        border: 2px solid rgba($color-text, 0.3);
+        border-top-color: $color-text;
+        border-radius: 50%;
+        animation: loader-spin 0.7s linear infinite;
+      }
+    }
   }
 
   &__bottom {

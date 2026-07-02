@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { resolveAxiosErrorMessage } from '../utils/api-error-message.js';
 import { emitApiEvent } from '../utils/api-events.js';
 import { API_BASE_URL, API_EVENT, LOADER } from '../utils/constants.js';
 
@@ -27,27 +28,7 @@ http.interceptors.response.use(
   },
   (error) => {
     emitApiEvent(API_EVENT.LOADER_HIDE, loaderMode(error.config));
-    emitApiEvent(API_EVENT.NOTIFY_ERROR, toUserMessage(error));
+    emitApiEvent(API_EVENT.NOTIFY_ERROR, resolveAxiosErrorMessage(error));
     return Promise.reject(error);
   },
 );
-
-/**
- * Maps a technical Axios error to a safe user-facing message.
- * @param {import('axios').AxiosError} error
- * @returns {string}
- */
-function toUserMessage(error) {
-  if (error.response) {
-    const { status } = error.response;
-
-    if (status === 404) return 'Not found. Please try again.';
-    if (status >= 500) return 'Server error. Please try later.';
-
-    return 'Request failed. Please check your input.';
-  }
-
-  if (error.code === 'ECONNABORTED') return 'Request timed out. Please retry.';
-
-  return 'Network error. Check your connection.';
-}
