@@ -1,18 +1,25 @@
-<picture class="promo-card-picture">
-  <source
-    media="(min-width: 1440px)"
-    srcset="/images/quote-main-img.jpg, /images/quote-main-img@2x.jpg 2x"
-  />
+---
+import { withBase, withBaseSrcSet } from '../../utils/withBase';
 
-  <source
-    media="(min-width: 768px)"
-    srcset="/images/quote-main-tablet.jpg, /images/quote-main-tablet@2x.jpg 2x"
-  />
+const desktopSrcset = withBaseSrcSet(
+  'images/quote-main-img.jpg, images/quote-main-img@2x.jpg 2x',
+);
+const tabletSrcset = withBaseSrcSet(
+  'images/quote-main-tablet.jpg, images/quote-main-tablet@2x.jpg 2x',
+);
+const mobileSrc = withBase('images/quote-main-mobile.jpg');
+const mobileSrcset = withBaseSrcSet('images/quote-main-mobile@2x.jpg 2x');
+---
+
+<picture class="promo-card-picture">
+  <source media="(min-width: 1440px)" srcset={desktopSrcset} />
+
+  <source media="(min-width: 768px)" srcset={tabletSrcset} />
 
   <img
     class="promo-card-img"
-    src="/images/quote-main-mobile.jpg"
-    srcset="/images/quote-main-mobile@2x.jpg 2x"
+    src={mobileSrc}
+    srcset={mobileSrcset}
     alt="Promo training motivation"
     loading="lazy"
   />
