@@ -72,11 +72,7 @@ const websiteSchema = {
   <body>
     <div set:html={spriteSvg} hidden aria-hidden="true" />
 
-    <Header
-      homeHref={withBase('')}
-      favoritesHref={withBase('favorites')}
-      isFavorites={Astro.url.pathname.includes('favorites')}
-    />
+    <Header currentPath={Astro.url.pathname} />
 
     <slot />
 

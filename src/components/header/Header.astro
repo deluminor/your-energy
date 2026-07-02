@@ -1,4 +1,8 @@
 ---
+import { NAV_ITEMS } from '../../constants/navigation';
+import { withBase } from '../../utils/withBase';
+import { isNavActive } from '../../utils/isNavActive';
+
 const SOCIALS = [
   {
     name: 'Facebook',
@@ -18,12 +22,13 @@ const SOCIALS = [
 ];
 
 interface Props {
-  homeHref: string;
-  favoritesHref: string;
-  isFavorites: boolean;
+  currentPath: string;
 }
 
-const { homeHref, favoritesHref, isFavorites } = Astro.props as Props;
+const { currentPath } = Astro.props as Props;
+const homeHref = withBase(NAV_ITEMS[0].path);
+const favoritesHref = withBase(NAV_ITEMS[1].path);
+const isFavorites = isNavActive('favorites', currentPath);
 ---
 
 <header class="header">
@@ -42,20 +47,24 @@ const { homeHref, favoritesHref, isFavorites } = Astro.props as Props;
 
     <nav class="header__nav" aria-label="Main">
       <ul class="nav">
-        <li>
-          <a
-            class:list={['nav__link', { 'nav__link--active': !isFavorites }]}
-            href={homeHref}
-            aria-current={!isFavorites ? 'page' : undefined}>Home</a
-          >
-        </li>
-        <li>
-          <a
-            class:list={['nav__link', { 'nav__link--active': isFavorites }]}
-            href={favoritesHref}
-            aria-current={isFavorites ? 'page' : undefined}>Favorites</a
-          >
-        </li>
+        {
+          NAV_ITEMS.map(({ label, path }) => {
+            const href = withBase(path);
+            const isActive = isNavActive(path, currentPath);
+
+            return (
+              <li>
+                <a
+                  class:list={['nav__link', { 'nav__link--active': isActive }]}
+                  href={href}
+                  aria-current={isActive ? 'page' : undefined}
+                >
+                  {label}
+                </a>
+              </li>
+            );
+          })
+        }
       </ul>
     </nav>
 
