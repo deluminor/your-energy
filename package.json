@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "Go Fit — adaptive fitness exercises catalog. Team project for the MSc in Software Engineering & AI at Neoversity (GoIT), vanilla stack.",
+  "description": "GoFit — adaptive fitness exercises catalog. Team project for the MSc in Software Engineering & AI at Neoversity (GoIT), vanilla stack.",
   "engines": {
     "node": ">=22.12.0"
   },

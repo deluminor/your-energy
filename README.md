@@ -1,4 +1,4 @@
-# Go Fit
+# GoFit
 
 > Adaptive fitness-exercise catalog with filtering, favorites, detail modals, ratings, and a newsletter subscription. Team project for the **MSc in Software Engineering & AI**, built with **Astro** and **TypeScript**.
 
