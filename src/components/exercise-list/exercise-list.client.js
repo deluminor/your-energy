@@ -2,9 +2,9 @@ import { getExercises } from '../../api/exercises.api.js';
 import { getState, setState } from '../../services/store.service.js';
 import { FILTER_PARAM, LOADER } from '../../utils/constants.js';
 import { renderExerciseCard } from '../exercise-card/render-exercise-card.js';
+import { openExerciseModal } from '../exercise-modal/exercise-modal.js';
 import { createListStatus } from '../shared/list-status.js';
 import { bindStoreIsland } from '../shared/store-island.js';
-import { openExerciseModal } from '../exercise-modal/exercise-modal.js';
 
 const BLOCK = 'exercise-list';
 const status = createListStatus(BLOCK);

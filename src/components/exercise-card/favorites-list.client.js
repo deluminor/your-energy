@@ -112,7 +112,11 @@ export function initFavoritesList(root) {
     const startButton = target.closest('.exercise-card__start');
 
     if (startButton && listRoot.contains(startButton)) {
-      openExerciseModal();
+      const id = startButton.getAttribute('data-id');
+
+      if (!id) return;
+
+      openExerciseModal(id);
     }
   };
 

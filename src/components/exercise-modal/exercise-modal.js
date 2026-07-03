@@ -1,12 +1,12 @@
-import { openModal } from '../ui/modal/modal.js';
 import { getExerciseById } from '../../api/exercises.api.js';
 import {
   isFavorite,
   toggleFavorite,
 } from '../../services/favorites.service.js';
-import { openRatingModal } from '../rating-modal/rating-modal.js';
-import { SPRITE_ICON, renderSpriteIcon } from '../../utils/sprite-icon.js';
 import { escapeHtml } from '../../utils/escape-html.js';
+import { SPRITE_ICON, renderSpriteIcon } from '../../utils/sprite-icon.js';
+import { openRatingModal } from '../rating-modal/rating-modal.js';
+import { openModal } from '../ui/modal/modal.js';
 
 /** @typedef {import('../../types/exercise').Exercise} Exercise */
 
@@ -109,7 +109,7 @@ function renderExerciseContent(exercise) {
 
       <div class="exercise-modal__info">
         <h2 class="exercise-modal__title">${escapeHtml(exercise.name)}</h2>
-        
+
         ${renderRating(Number(exercise.rating))}
         ${renderStatsList(exercise)}
 
