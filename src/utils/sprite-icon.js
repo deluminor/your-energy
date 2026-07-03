@@ -7,6 +7,7 @@ export const SPRITE_ICON = {
   CLOSE: 'icon-close',
   ARROW_UP_RIGHT: 'icon-arrow-up-right',
   SEARCH: 'icon-search',
+  HEART: 'icon-heart',
 };
 
 /**

@@ -1,3 +1,5 @@
+import { SPRITE_ICON, renderSpriteIcon } from '../../../utils/sprite-icon.js';
+
 const ROOT_ID = 'modal-root';
 const FOCUSABLE_SELECTOR =
   'a[href], button:not([disabled]), textarea, input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])';
@@ -32,11 +34,20 @@ export function openModal({ name, label, content = '', onClose }) {
   const previouslyFocused = document.activeElement;
   if (activeClose) activeClose();
 
+  const closeIconHtml = renderSpriteIcon(SPRITE_ICON.CLOSE || 'close', {
+    className: 'modal__close-icon',
+    width: '100%',
+    height: '100%',
+    stroke: true,
+  });
+
   root.innerHTML = `
     <div class="modal" data-modal="${name}">
       <div class="modal__backdrop" data-close></div>
       <div class="modal__dialog" role="dialog" aria-modal="true" tabindex="-1">
-        <button class="modal__close" type="button" data-close aria-label="Close">×</button>
+        <button class="modal__close" type="button" data-close aria-label="Close">
+          ${closeIconHtml}
+        </button>
         ${content}
       </div>
     </div>`;
