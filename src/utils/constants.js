@@ -41,6 +41,7 @@ export const EMAIL_PATTERN = /^\w+(\.\w+)?@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/;
 export const LOADER = {
   GLOBAL: 'global',
   SILENT: 'silent',
+  EXERCISE_MODAL: '[data-component="exercise-modal"]',
 };
 
 export const API_EVENT = {

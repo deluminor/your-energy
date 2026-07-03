@@ -3,6 +3,7 @@ import {
   isFavorite,
   toggleFavorite,
 } from '../../services/favorites.service.js';
+import { LOADER } from '../../utils/constants.js';
 import { escapeHtml } from '../../utils/escape-html.js';
 import { SPRITE_ICON, renderSpriteIcon } from '../../utils/sprite-icon.js';
 import { openRatingModal } from '../rating-modal/rating-modal.js';
@@ -104,28 +105,76 @@ function renderExerciseContent(exercise) {
     : `<div class="exercise-modal__img-placeholder">No image</div>`;
 
   return `
-    <div class="exercise-modal__container">
-      <div class="exercise-modal__media">${imageHtml}</div>
+    <div class="exercise-modal" data-component="exercise-modal">
+      <div class="exercise-modal__container">
+        <div class="exercise-modal__media">${imageHtml}</div>
 
-      <div class="exercise-modal__info">
-        <h2 class="exercise-modal__title">${escapeHtml(exercise.name)}</h2>
+        <div class="exercise-modal__info">
+          <h2 class="exercise-modal__title">${escapeHtml(exercise.name)}</h2>
 
-        ${renderRating(Number(exercise.rating))}
-        ${renderStatsList(exercise)}
+          ${renderRating(Number(exercise.rating))}
+          ${renderStatsList(exercise)}
 
-        <p class="exercise-modal__description">${escapeHtml(exercise.description)}</p>
+          <p class="exercise-modal__description">${escapeHtml(exercise.description)}</p>
 
-        <div class="exercise-modal__actions">
-          <button class="exercise-modal__btn-fav" type="button" data-action="fav">
-            ${getFavButtonContent(isFav)}
-          </button>
-          <button class="exercise-modal__btn-rate" type="button" data-action="rate">
-            Give a rating
-          </button>
+          <div class="exercise-modal__actions">
+            <button class="exercise-modal__btn-fav" type="button" data-action="fav">
+              ${getFavButtonContent(isFav)}
+            </button>
+            <button class="exercise-modal__btn-rate" type="button" data-action="rate">
+              Give a rating
+            </button>
+          </div>
         </div>
       </div>
     </div>
   `;
+}
+
+const LOADING_CONTENT = `
+  <div
+    class="exercise-modal exercise-modal--loading"
+    data-component="exercise-modal"
+    aria-busy="true"
+  >
+    <span class="visually-hidden">Loading exercise details...</span>
+  </div>
+`;
+
+/**
+ * @param {Exercise} exerciseData
+ * @param {string} exerciseId
+ * @param {{ onClose?: () => void, onToggleFavorite?: () => void }} options
+ */
+function bindExerciseModalActions(exerciseData, exerciseId, options) {
+  const modalRoot = document.getElementById('modal-root');
+  const actionsContainer = modalRoot?.querySelector('.exercise-modal__actions');
+
+  actionsContainer?.addEventListener('click', (event) => {
+    const target = event.target;
+    if (!(target instanceof Element)) return;
+
+    const button = /** @type {HTMLButtonElement | null} */ (
+      target.closest('button')
+    );
+    if (!button) return;
+
+    const action = button.dataset.action;
+
+    if (action === 'fav') {
+      const isNowFavorite = toggleFavorite(exerciseData);
+      button.innerHTML = getFavButtonContent(isNowFavorite);
+
+      options.onToggleFavorite?.();
+    }
+
+    if (action === 'rate') {
+      openRatingModal({
+        exerciseId: exerciseData._id,
+        onClose: () => openExerciseModal(exerciseId, options),
+      });
+    }
+  });
 }
 
 /**
@@ -134,53 +183,45 @@ function renderExerciseContent(exercise) {
  * @returns {Promise<(() => void) | undefined>}
  */
 export async function openExerciseModal(exerciseId, options = {}) {
+  const close = openModal({
+    name: 'exercise',
+    label: 'Exercise details',
+    content: LOADING_CONTENT,
+    onClose: options.onClose,
+  });
+
   try {
     const exerciseData = /** @type {Exercise} */ (
-      await getExerciseById(exerciseId)
+      await getExerciseById(exerciseId, { loader: LOADER.EXERCISE_MODAL })
     );
 
-    const modalContent = renderExerciseContent(exerciseData);
+    const host = document.querySelector('[data-component="exercise-modal"]');
+    if (!host) return close;
 
-    const close = openModal({
-      name: 'exercise',
-      label: `Exercise details for ${exerciseData.name}`,
-      content: modalContent,
-      onClose: options.onClose,
-    });
+    host.outerHTML = renderExerciseContent(exerciseData);
 
-    const modalRoot = document.getElementById('modal-root');
-    const actionsContainer = modalRoot?.querySelector(
-      '.exercise-modal__actions',
+    const dialog = document.querySelector(
+      '.modal[data-modal="exercise"] .modal__dialog',
+    );
+    dialog?.setAttribute(
+      'aria-label',
+      `Exercise details for ${exerciseData.name}`,
     );
 
-    actionsContainer?.addEventListener('click', (event) => {
-      const target = event.target;
-      if (!(target instanceof Element)) return;
-
-      const button = /** @type {HTMLButtonElement | null} */ (
-        target.closest('button')
-      );
-      if (!button) return;
-
-      const action = button.dataset.action;
-
-      if (action === 'fav') {
-        const isNowFavorite = toggleFavorite(exerciseData);
-        button.innerHTML = getFavButtonContent(isNowFavorite);
-
-        options.onToggleFavorite?.();
-      }
-
-      if (action === 'rate') {
-        openRatingModal({
-          exerciseId: exerciseData._id,
-          onClose: () => openExerciseModal(exerciseId, options),
-        });
-      }
-    });
+    bindExerciseModalActions(exerciseData, exerciseId, options);
 
     return close;
   } catch (error) {
     console.error('Failed to load exercise:', error);
+
+    const host = document.querySelector('[data-component="exercise-modal"]');
+    if (!host) return close;
+
+    host.classList.remove('exercise-modal--loading');
+    host.removeAttribute('aria-busy');
+    host.innerHTML =
+      '<p class="exercise-modal__error">Failed to load exercise. Please try again.</p>';
+
+    return close;
   }
 }

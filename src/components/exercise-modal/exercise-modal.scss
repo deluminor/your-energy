@@ -5,6 +5,10 @@
     background-color: rgba(4, 4, 4, 0.4);
   }
 
+  .loader {
+    background-color: rgba($color-heading, 0.75);
+  }
+
   .modal__dialog {
     width: min(335px, 92vw);
     padding: 40px $container-pad-mobile;
@@ -70,6 +74,22 @@
 }
 
 .exercise-modal {
+  &--loading {
+    min-height: 420px;
+
+    @media (min-width: $bp-tablet) {
+      min-height: 320px;
+    }
+  }
+
+  &__error {
+    margin: 0;
+    color: rgba($color-bg, 0.8);
+    font-size: 14px;
+    line-height: 128.571%;
+    text-align: center;
+  }
+
   &__container {
     display: flex;
     flex-direction: column;
