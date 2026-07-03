@@ -130,19 +130,22 @@ function renderExerciseContent(exercise) {
 
 /**
  * @param {string} exerciseId
+ * @param {{ onClose?: () => void, onToggleFavorite?: () => void }} [options]
  * @returns {Promise<(() => void) | undefined>}
  */
-export async function openExerciseModal(exerciseId) {
+export async function openExerciseModal(exerciseId, options = {}) {
   try {
     const exerciseData = /** @type {Exercise} */ (
       await getExerciseById(exerciseId)
     );
 
     const modalContent = renderExerciseContent(exerciseData);
+
     const close = openModal({
       name: 'exercise',
       label: `Exercise details for ${exerciseData.name}`,
       content: modalContent,
+      onClose: options.onClose,
     });
 
     const modalRoot = document.getElementById('modal-root');
@@ -164,12 +167,14 @@ export async function openExerciseModal(exerciseId) {
       if (action === 'fav') {
         const isNowFavorite = toggleFavorite(exerciseData);
         button.innerHTML = getFavButtonContent(isNowFavorite);
+
+        options.onToggleFavorite?.();
       }
 
       if (action === 'rate') {
         openRatingModal({
           exerciseId: exerciseData._id,
-          onClose: () => openExerciseModal(exerciseId),
+          onClose: () => openExerciseModal(exerciseId, options),
         });
       }
     });

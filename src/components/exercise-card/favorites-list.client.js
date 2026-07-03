@@ -112,11 +112,15 @@ export function initFavoritesList(root) {
     const startButton = target.closest('.exercise-card__start');
 
     if (startButton && listRoot.contains(startButton)) {
-      const id = startButton.getAttribute('data-id');
+      const exerciseId = startButton.getAttribute('data-id');
 
-      if (!id) return;
+      if (!exerciseId) return;
 
-      openExerciseModal(id);
+      openExerciseModal(exerciseId, {
+        onToggleFavorite: () => {
+          refresh(currentPage);
+        },
+      });
     }
   };
 
