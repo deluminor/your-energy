@@ -1,4 +1,15 @@
-<article class="daily-norm" aria-labelledby="daily-norm-title">
+---
+interface Props {
+  compact?: boolean;
+}
+
+const { compact = false } = Astro.props;
+---
+
+<article
+  class:list={['daily-norm', { 'daily-norm--compact': compact }]}
+  aria-labelledby="daily-norm-title"
+>
   <div class="daily-norm__top">
     <div class="daily-norm__icon" aria-hidden="true">
       <svg class="daily-norm__icon-svg" width="20" height="20">

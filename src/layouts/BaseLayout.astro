@@ -11,10 +11,16 @@ interface Props {
   title: string;
   description: string;
   ogImage?: string;
+  robots?: string;
 }
 
 const SITE_NAME = 'Your Energy';
-const { title, description, ogImage = 'og-image.svg' } = Astro.props;
+const {
+  title,
+  description,
+  ogImage = 'og-image.svg',
+  robots = 'index, follow',
+} = Astro.props;
 
 const canonicalUrl = new URL(Astro.url.pathname, Astro.site).href;
 const ogImageUrl = new URL(withBase(ogImage), Astro.site).href;
@@ -44,6 +50,7 @@ const websiteSchema = {
     <title>{title}</title>
 
     <meta name="description" content={description} />
+    <meta name="robots" content={robots} />
 
     <link rel="canonical" href={canonicalUrl} />
     <link rel="icon" href={faviconHref} type="image/svg+xml" />
