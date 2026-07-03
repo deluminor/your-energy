@@ -50,14 +50,15 @@ describe('initQuote', () => {
     );
   });
 
-  it('fetches and caches quote when cache is missing or stale', async () => {
+  it('fetches and caches quote when cache is missing and SSR is empty', async () => {
     const today = new Date().toISOString().slice(0, 10);
 
-    vi.mocked(readJSON).mockReturnValue({
-      date: '2000-01-01',
-      quote: 'Old quote',
-      author: 'Old author',
-    });
+    root.innerHTML = `
+      <p data-quote-text></p>
+      <p data-quote-author></p>
+    `;
+
+    vi.mocked(readJSON).mockReturnValue(null);
     vi.mocked(getQuote).mockResolvedValue({
       quote: 'Fresh quote',
       author: 'Fresh author',
@@ -74,5 +75,45 @@ describe('initQuote', () => {
     expect(root.querySelector('[data-quote-text]')?.textContent).toBe(
       'Fresh quote',
     );
+  });
+
+  it('seeds cache from SSR quote instead of fetching when cache is stale', async () => {
+    const today = new Date().toISOString().slice(0, 10);
+
+    vi.mocked(readJSON).mockReturnValue({
+      date: '2000-01-01',
+      quote: 'Old quote',
+      author: 'Old author',
+    });
+
+    await initQuote(root);
+
+    expect(getQuote).not.toHaveBeenCalled();
+    expect(writeJSON).toHaveBeenCalledWith(STORAGE_KEYS.QUOTE, {
+      date: today,
+      quote: 'SSR quote',
+      author: 'SSR author',
+    });
+    expect(root.querySelector('[data-quote-text]')?.textContent).toBe(
+      'SSR quote',
+    );
+  });
+
+  it('does not rewrite DOM when cached quote already matches SSR', async () => {
+    const today = new Date().toISOString().slice(0, 10);
+    const textEl = root.querySelector('[data-quote-text]');
+    const authorEl = root.querySelector('[data-quote-author]');
+
+    vi.mocked(readJSON).mockReturnValue({
+      date: today,
+      quote: 'SSR quote',
+      author: 'SSR author',
+    });
+
+    await initQuote(root);
+
+    expect(getQuote).not.toHaveBeenCalled();
+    expect(textEl?.textContent).toBe('SSR quote');
+    expect(authorEl?.textContent).toBe('SSR author');
   });
 });

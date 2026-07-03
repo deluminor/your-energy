@@ -1,10 +1,38 @@
+---
+import { getFilters } from '../../api/filters.api.js';
+import { DEFAULT_FILTER } from '../../utils/constants.js';
+import { renderPaginationMarkup } from './pagination-view.js';
+
+const INITIAL_PAGE = 1;
+
+let totalPages = 1;
+
+try {
+  const data = await getFilters({ filter: DEFAULT_FILTER, page: INITIAL_PAGE });
+
+  totalPages = data.totalPages;
+} catch (error) {
+  console.error(
+    '[build] Pagination: getFilters failed, shipping hidden pagination',
+    error,
+  );
+}
+
+const isHidden = totalPages <= 1;
+const html = isHidden
+  ? ''
+  : renderPaginationMarkup({ page: INITIAL_PAGE, totalPages });
+---
+
 <nav
   class="pagination"
   data-component="pagination"
+  data-ssr-page={String(INITIAL_PAGE)}
+  data-total-pages={String(totalPages)}
   aria-label="Pagination"
-  hidden
->
-</nav>
+  hidden={isHidden || undefined}
+  set:html={html}
+/>
 
 <script>
   import { initPagination } from './pagination.client.js';

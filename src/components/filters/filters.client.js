@@ -1,31 +1,27 @@
 import { getState, setState } from '../../services/store.service.js';
-import { FILTER } from '../../utils/constants.js';
-import { escapeHtml } from '../../utils/escape-html.js';
 import { bindStoreIsland } from '../shared/store-island.js';
-
-const FILTER_TABS = [FILTER.MUSCLES, FILTER.BODY_PARTS, FILTER.EQUIPMENT];
+import { renderFiltersMarkup } from './render-filters.js';
 
 /**
  * @param {HTMLElement} root
  * @param {string} activeFilter
  */
 function render(root, activeFilter) {
-  const tabs = FILTER_TABS.map((label) => {
-    const isActive = label === activeFilter;
+  const tabs = root.querySelectorAll('[data-filter]');
 
-    return `
-      <button
-        type="button"
-        class="filters__tab${isActive ? ' filters__tab--active' : ''}"
-        aria-pressed="${isActive}"
-        data-filter="${escapeHtml(label)}"
-      >
-        <span class="filters__label">${escapeHtml(label)}</span>
-        <span class="filters__underline" aria-hidden="true"></span>
-      </button>`;
-  }).join('');
+  if (tabs.length > 0) {
+    for (const tab of tabs) {
+      const filter = tab.getAttribute('data-filter') ?? '';
+      const isActive = filter === activeFilter;
 
-  root.innerHTML = tabs;
+      tab.classList.toggle('filters__tab--active', isActive);
+      tab.setAttribute('aria-pressed', String(isActive));
+    }
+
+    return;
+  }
+
+  root.innerHTML = renderFiltersMarkup(activeFilter);
 }
 
 /**

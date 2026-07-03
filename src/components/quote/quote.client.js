@@ -15,6 +15,19 @@ function getTodayKey() {
 
 /**
  * @param {HTMLElement} root
+ * @returns {{ quote: string, author: string } | null}
+ */
+function readSsrQuote(root) {
+  const quote = root.querySelector('[data-quote-text]')?.textContent?.trim();
+  const author = root.querySelector('[data-quote-author]')?.textContent?.trim();
+
+  if (!quote || !author) return null;
+
+  return { quote, author };
+}
+
+/**
+ * @param {HTMLElement} root
  * @param {CachedQuote} cached
  */
 function renderCachedQuote(root, cached) {
@@ -22,6 +35,13 @@ function renderCachedQuote(root, cached) {
   const authorEl = root.querySelector('[data-quote-author]');
 
   if (!textEl || !authorEl) return;
+
+  if (
+    textEl.textContent === cached.quote &&
+    authorEl.textContent === cached.author
+  ) {
+    return;
+  }
 
   textEl.textContent = cached.quote;
   authorEl.textContent = cached.author;
@@ -50,6 +70,7 @@ export async function initQuote(root) {
   if (!root) return;
 
   const today = getTodayKey();
+  const ssrQuote = readSsrQuote(root);
   const cached = readJSON(
     STORAGE_KEYS.QUOTE,
     /** @type {CachedQuote | null} */ (null),
@@ -57,6 +78,15 @@ export async function initQuote(root) {
 
   if (cached?.date === today) {
     renderCachedQuote(root, cached);
+    return;
+  }
+
+  if (ssrQuote) {
+    writeJSON(STORAGE_KEYS.QUOTE, {
+      date: today,
+      quote: ssrQuote.quote,
+      author: ssrQuote.author,
+    });
     return;
   }
 
