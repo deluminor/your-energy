@@ -3,6 +3,7 @@ import { ROUTES } from '@/constants/navigation';
 import { withBase } from '@/utils/withBase';
 
 const homeHref = withBase(ROUTES.HOME);
+const currentYear = new Date().getFullYear();
 ---
 
 <footer class="footer">
@@ -127,7 +128,7 @@ const homeHref = withBase(ROUTES.HOME);
         <a class="footer__policy-link" href="#">Terms of Service</a>
       </div>
 
-      <p class="footer__year">©2026</p>
+      <p class="footer__year">&copy; {currentYear}</p>
     </div>
   </div>
 </footer>

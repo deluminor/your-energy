@@ -8,6 +8,10 @@
   <img alt="SCSS" src="https://img.shields.io/badge/SCSS-modular-cc6699?logo=sass&logoColor=fff" />
   <img alt="Vitest" src="https://img.shields.io/badge/tests-Vitest-6e9f18?logo=vitest&logoColor=fff" />
   <img alt="Code style: Prettier" src="https://img.shields.io/badge/code_style-prettier-ff69b4?logo=prettier&logoColor=fff" />
+  <img alt="Lighthouse Performance" src="https://img.shields.io/badge/Performance-100-00C853?logo=lighthouse&logoColor=fff" />
+  <img alt="Lighthouse Accessibility" src="https://img.shields.io/badge/Accessibility-100-00C853?logo=lighthouse&logoColor=fff" />
+  <img alt="Lighthouse Best Practices" src="https://img.shields.io/badge/Best_Practices-100-00C853?logo=lighthouse&logoColor=fff" />
+  <img alt="Lighthouse SEO" src="https://img.shields.io/badge/SEO-100-00C853?logo=lighthouse&logoColor=fff" />
 </p>
 
 ## Table of Contents
@@ -28,6 +32,7 @@
   - [Loading Indicator (loader)](#loading-indicator-loader)
 - [API Reference](#api-reference)
 - [Code Quality](#code-quality)
+- [Performance](#performance)
 - [Deployment](#deployment)
 - [Contributing](#contributing)
 
@@ -87,6 +92,7 @@ npm run dev        # Astro dev server → http://localhost:4321
 
 ```
 go-fit/
+├── docs/                    # project docs (Lighthouse audit screenshots)
 ├── public/                  # static assets served as-is (favicon, og-image, robots.txt)
 ├── tests/                   # Vitest suite (*.test.ts) + setup.ts
 ├── .github/                 # CI + deploy workflows + CODEOWNERS
@@ -485,6 +491,36 @@ npm run check
 npm test
 npm run build
 ```
+
+## Performance
+
+Production build audited with [PageSpeed Insights](https://pagespeed.web.dev/) on **3 Jul 2026** against https://deluminor.github.io/go-fit/.
+
+| Metric         | Mobile | Desktop |
+| -------------- | -----: | ------: |
+| Performance    |    100 |     100 |
+| Accessibility  |    100 |     100 |
+| Best Practices |    100 |     100 |
+| SEO            |    100 |     100 |
+
+| Mobile                                   | Desktop                                  |
+| ---------------------------------------- | ---------------------------------------- |
+| FCP 0.9 s · LCP 1.7 s · TBT 0 ms · CLS 0 | FCP 0.3 s · LCP 0.6 s · TBT 0 ms · CLS 0 |
+
+<p align="center">
+  <img
+    src="docs/lighthouse/pagespeed-mobile.png"
+    alt="PageSpeed Insights report for GoFit — mobile"
+    width="49%"
+  />
+  <img
+    src="docs/lighthouse/pagespeed-desktop.png"
+    alt="PageSpeed Insights report for GoFit — desktop"
+    width="49%"
+  />
+</p>
+
+Screenshots: [`docs/lighthouse/pagespeed-mobile.png`](docs/lighthouse/pagespeed-mobile.png), [`docs/lighthouse/pagespeed-desktop.png`](docs/lighthouse/pagespeed-desktop.png).
 
 ## Deployment
 
