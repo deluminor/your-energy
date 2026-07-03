@@ -1,16 +1,9 @@
 const baseRoot = import.meta.env.BASE_URL.replace(/\/$/, '');
 
-/**
- * @param path
- */
 export function withBase(path: string): string {
   return `${baseRoot}/${path.replace(/^\//, '')}`;
 }
 
-/**
- * {@link withBase}
- * @param srcset
- */
 export function withBaseSrcSet(srcset: string): string {
   return srcset
     .split(',')

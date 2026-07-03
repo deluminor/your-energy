@@ -8,21 +8,22 @@ export const SPRITE_ICON = {
   ARROW_UP_RIGHT: 'icon-arrow-up-right',
   SEARCH: 'icon-search',
   HEART: 'icon-heart',
-};
+} as const;
 
-/**
- * @param {string} iconId
- * @param {{
- *   className?: string;
- *   width?: number | string;
- *   height?: number | string;
- *   viewBox?: string;
- *   stroke?: boolean;
- * }} [options]
- * @returns {string}
- * @example
- */
-export function renderSpriteIcon(iconId, options = {}) {
+export type SpriteIconId = (typeof SPRITE_ICON)[keyof typeof SPRITE_ICON];
+
+export interface RenderSpriteIconOptions {
+  className?: string;
+  width?: number | string;
+  height?: number | string;
+  viewBox?: string;
+  stroke?: boolean;
+}
+
+export function renderSpriteIcon(
+  iconId: string,
+  options: RenderSpriteIconOptions = {},
+): string {
   const {
     className = '',
     width,
