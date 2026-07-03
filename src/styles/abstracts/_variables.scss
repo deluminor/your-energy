@@ -22,8 +22,9 @@ $scrollbar-track: #dfdfdf;
 $scrollbar-thumb: $color-heading;
 $scrollbar-radius: 12px;
 
-// Typography
-$font-primary: 'DM Sans', sans-serif;
+// Typography — single-token name avoids minifier stripping required quotes
+$font-face-name: DMSans;
+$font-primary: var(--font-primary);
 $font-weight-regular: 400;
 $font-weight-medium: 500;
 

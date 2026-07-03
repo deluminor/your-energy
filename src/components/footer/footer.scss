@@ -67,7 +67,7 @@
     &:focus-visible {
       color: $color-text;
       background-color: $color-on-media;
-      border-color: $color-on-media;
+      border-color: transparent;
       outline: none;
     }
   }

@@ -1,11 +1,15 @@
 @use '../abstracts' as *;
 
+:root {
+  --font-primary: DMSans, sans-serif;
+}
+
 html {
   font-size: 16px;
 }
 
 body {
-  font-family: $font-primary;
+  font-family: var(--font-primary);
   font-weight: $font-weight-regular;
   color: $color-text;
   line-height: 1.5;

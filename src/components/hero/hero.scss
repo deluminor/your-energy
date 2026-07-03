@@ -43,7 +43,7 @@ $bp-hero-wide: 1158px;
 
 .hero-title {
   color: $color-heading;
-  font-family: $font-primary;
+  font-family: var(--font-primary);
   font-size: 38px;
   font-style: normal;
   font-weight: $font-weight-regular;
@@ -89,7 +89,7 @@ $bp-hero-wide: 1158px;
 .hero-description {
   max-width: 335px;
   color: $color-heading;
-  font-family: $font-primary;
+  font-family: var(--font-primary);
   font-size: 14px;
   font-style: normal;
   font-weight: $font-weight-regular;
@@ -198,7 +198,7 @@ $bp-hero-wide: 1158px;
 
 .hero-tag {
   color: $color-heading;
-  font-family: $font-primary;
+  font-family: var(--font-primary);
   font-size: 14px;
   font-style: normal;
   font-weight: $font-weight-regular;

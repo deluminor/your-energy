@@ -60,7 +60,7 @@
   &--visible {
     opacity: 1;
     visibility: visible;
-    pointer-events: auto;
+    pointer-events: unset;
     transform: translateY(0) scale(1);
 
     @media (prefers-reduced-motion: reduce) {

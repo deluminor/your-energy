@@ -71,7 +71,7 @@ $favorites-scroll-max-height: 525px;
       border-radius: 0;
       background: transparent;
       color: $color-heading;
-      font-family: $font-primary;
+      font-family: var(--font-primary);
       font-size: 18px;
       line-height: 24px;
       font-weight: $font-weight-regular;
