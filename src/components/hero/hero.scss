@@ -1,6 +1,8 @@
 @use '../../styles/abstracts' as *;
 
-.container {
+$bp-hero-wide: 1158px;
+
+[data-component='hero'] {
   @include respond($bp-desktop) {
     position: relative;
   }
@@ -33,7 +35,6 @@
   display: flex;
   flex-direction: column;
   gap: 20px;
-  max-width: 335px;
 
   @include respond($bp-tablet) {
     max-width: 700px;
@@ -48,6 +49,10 @@
   font-weight: $font-weight-regular;
   line-height: 44px;
   letter-spacing: 0.76px;
+
+  @include respond($bp-mobile) {
+    font-size: 34px;
+  }
 
   @include respond($bp-tablet) {
     font-size: 74px;
@@ -64,7 +69,7 @@
 .hero-icon {
   display: inline-block;
   vertical-align: sub;
-  margin-right: 20px;
+  margin-right: 16px;
 
   svg {
     width: 38px;
@@ -73,7 +78,6 @@
 
   @include respond($bp-tablet) {
     margin-bottom: 12px;
-    margin-right: 16px;
 
     svg {
       width: 59px;
@@ -112,7 +116,12 @@
     margin-bottom: 16px;
   }
 
-  @media (min-width: 1376px) {
+  @media (min-width: $bp-hero-wide) and (max-width: #{$bp-desktop - 1px}) {
+    aspect-ratio: 1376 / 350;
+    margin-bottom: 16px;
+  }
+
+  @include respond($bp-desktop) {
     aspect-ratio: 1376 / 350;
     margin-bottom: 0;
   }
@@ -129,6 +138,18 @@
   display: none;
 }
 
+.hero-right {
+  @include respond($bp-tablet) {
+    @media (max-width: #{$bp-desktop - 1px}) {
+      position: static;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      width: 100%;
+    }
+  }
+}
+
 @include respond($bp-desktop) {
   .hero-right {
     position: absolute;
@@ -138,6 +159,7 @@
     flex-direction: column;
     align-items: flex-end;
     gap: 32px;
+    width: auto;
   }
 
   .hero-mini-img-container {
@@ -163,6 +185,10 @@
 
   @include respond($bp-tablet) {
     justify-content: flex-end;
+  }
+
+  @media (min-width: $bp-hero-wide) and (max-width: #{$bp-desktop - 1px}) {
+    width: auto;
   }
 
   @include respond($bp-desktop) {

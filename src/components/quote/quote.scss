@@ -8,6 +8,14 @@
   border-radius: $radius-md;
   background-color: $color-heading;
 
+  @include respond($bp-tablet) {
+    @media (max-width: #{$bp-desktop - 1px}) {
+      min-height: 249px;
+      height: 100%;
+      justify-content: space-between;
+    }
+  }
+
   &__header {
     display: flex;
     align-items: center;

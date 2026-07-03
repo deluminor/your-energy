@@ -61,7 +61,7 @@ const heroMainDeskSrcset = withBaseSrcSet(
     as="image"
     href={heroMainDeskSrc}
     imagesrcset={heroMainDeskSrcset}
-    media="(min-width: 1376px)"
+    media="(min-width: 1158px)"
     fetchpriority="high"
   />
 
@@ -212,6 +212,7 @@ const heroMainDeskSrcset = withBaseSrcSet(
           grid-column: 1;
           grid-row: 2;
           width: 100%;
+          max-width: 400px;
           align-self: start;
         }
       }
@@ -229,6 +230,10 @@ const heroMainDeskSrcset = withBaseSrcSet(
           grid-row: unset !important;
           width: 100% !important;
           height: auto !important;
+          max-width: unset !important;
+        }
+
+        &-norm {
           max-width: unset !important;
         }
       }

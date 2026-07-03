@@ -5,8 +5,10 @@
   width: 100%;
   min-height: 201px;
   padding: 20px 20px 20px 70px;
+  border: 1px solid $color-border;
   border-radius: 20px;
   background-color: $color-white;
+  box-sizing: border-box;
   cursor: initial;
 
   @include respond($bp-tablet) {

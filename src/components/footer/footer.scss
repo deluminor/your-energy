@@ -18,6 +18,11 @@
     flex-direction: column;
   }
 
+  &__promo {
+    display: flex;
+    flex-direction: column;
+  }
+
   &__brand {
     display: flex;
     flex-direction: column;
@@ -219,12 +224,10 @@
 
     &__top {
       display: grid;
-      grid-template-columns: rem(156) rem(434);
-      grid-template-areas:
-        'brand title'
-        '. subscribe';
-      column-gap: rem(114);
-      row-gap: rem(32);
+      grid-template-columns: rem(156) 1fr;
+      grid-template-areas: 'brand promo';
+      column-gap: rem(32);
+      align-items: start;
     }
 
     &__brand {
@@ -233,20 +236,25 @@
       margin-bottom: 0;
     }
 
-    &__title {
-      grid-area: title;
-      max-width: rem(434);
-      margin: 0;
+    &__promo {
+      grid-area: promo;
+      justify-self: end;
+      width: rem(430);
+      gap: rem(32);
+    }
 
+    &__title {
+      width: 100%;
+      max-width: none;
+      margin: 0;
       font-size: rem(56);
       line-height: 1.07;
       letter-spacing: -0.02em;
     }
 
     &__subscribe {
-      grid-area: subscribe;
-      width: rem(352);
-      gap: rem(20);
+      width: 100%;
+      max-width: none;
     }
 
     &__social-item,
@@ -305,46 +313,66 @@
     }
 
     &__top {
-      grid-template-columns: rem(132) rem(595) rem(352);
+      display: grid;
+      grid-template-columns: rem(132) minmax(0, rem(600)) rem(352);
       grid-template-areas: 'brand title subscribe';
       justify-content: space-between;
       align-items: start;
-      column-gap: 0;
+      column-gap: rem(32);
       row-gap: 0;
     }
 
+    &__brand {
+      grid-area: brand;
+    }
+
+    &__promo {
+      display: contents;
+    }
+
     &__title {
-      max-width: rem(595);
+      grid-area: title;
+      width: 100%;
+      max-width: rem(600);
+      margin: 0;
       font-size: rem(56);
       line-height: 1.07;
     }
 
     &__subscribe {
+      grid-area: subscribe;
       width: rem(352);
+      max-width: rem(352);
+      justify-self: end;
     }
 
     &__bottom {
       display: grid;
-      grid-template-columns: rem(132) rem(595) rem(352);
+      grid-template-columns: rem(132) minmax(0, 1fr) rem(352);
+      grid-template-areas: 'copyright policy year';
       justify-content: space-between;
       align-items: center;
+      column-gap: rem(32);
     }
 
     &__copyright {
+      grid-area: copyright;
       width: auto;
       margin: 0;
       white-space: nowrap;
     }
 
     &__policy {
+      grid-area: policy;
       margin: 0;
-      justify-self: start;
+      justify-self: center;
     }
 
     &__year {
+      grid-area: year;
       margin: 0;
-      justify-self: start;
-      transform: translateX(rem(52));
+      justify-self: end;
+      transform: none;
     }
   }
 }

@@ -14,8 +14,21 @@ $favorites-scroll-max-height: 525px;
     scrollbar-color: $scrollbar-thumb $scrollbar-track;
     @include custom-scrollbar;
 
+    @include respond($bp-tablet) {
+      @media (max-width: #{$bp-desktop - 1px}) {
+        max-height: none;
+        overflow-y: visible;
+      }
+    }
+
     .favorites-list {
       padding-right: 12px;
+
+      @include respond($bp-tablet) {
+        @media (max-width: #{$bp-desktop - 1px}) {
+          padding-right: 0;
+        }
+      }
     }
   }
 }
@@ -41,6 +54,12 @@ $favorites-scroll-max-height: 525px;
       @include flex-center;
 
       min-height: 141px;
+
+      @include respond($bp-tablet) {
+        @media (max-width: #{$bp-desktop - 1px}) {
+          min-height: 240px;
+        }
+      }
     }
 
     &--empty .placeholder {
