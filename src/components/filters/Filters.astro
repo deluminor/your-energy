@@ -1,5 +1,14 @@
-<div class="filters" data-component="filters" aria-label="Exercise filters">
-</div>
+---
+import { DEFAULT_FILTER } from '../../utils/constants.js';
+import { renderFiltersMarkup } from './render-filters.js';
+---
+
+<div
+  class="filters"
+  data-component="filters"
+  aria-label="Exercise filters"
+  set:html={renderFiltersMarkup(DEFAULT_FILTER)}
+/>
 
 <script>
   import { initFilters } from './filters.client.js';
