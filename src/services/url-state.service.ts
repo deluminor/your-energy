@@ -1,77 +1,57 @@
-import { DEFAULT_FILTER, FILTER_PARAM } from '../utils/constants.js';
+import {
+  DEFAULT_FILTER,
+  FILTER_PARAM,
+  type FilterType,
+} from '@/constants/filters.ts';
+import type { PersistedUiState } from '@/types/app-state.ts';
 
 const URL_PARAM = {
   FILTER: 'filter',
   PAGE: 'page',
   CATEGORY: 'category',
   KEYWORD: 'keyword',
-};
+} as const;
 
 const FILTER_BY_PARAM = Object.fromEntries(
   Object.entries(FILTER_PARAM).map(([filter, param]) => [param, filter]),
-);
+) as Record<string, FilterType>;
 
 const DEFAULT_FILTER_PARAM = FILTER_PARAM[DEFAULT_FILTER];
 
-/**
- * @typedef {object} PersistedUiState
- * @property {string} activeFilter
- * @property {number} page
- * @property {?{ name: string, filter: string }} category
- * @property {string} keyword
- */
-
-function canUseUrl() {
+function canUseUrl(): boolean {
   return (
     typeof window !== 'undefined' && typeof URLSearchParams !== 'undefined'
   );
 }
 
-/**
- * @param {URLSearchParams} params
- * @returns {boolean}
- */
-function hasPersistedParams(params) {
+function hasPersistedParams(params: URLSearchParams): boolean {
   return Object.values(URL_PARAM).some((key) => params.has(key));
 }
 
-/**
- * @param {string | null} value
- * @returns {string}
- */
-function parseActiveFilter(value) {
+function parseActiveFilter(value: string | null): string {
   return FILTER_BY_PARAM[value ?? ''] ?? DEFAULT_FILTER;
 }
 
-/**
- * @param {string | null} value
- * @returns {number}
- */
-function parsePage(value) {
+function parsePage(value: string | null): number {
   const page = Number(value);
   return Number.isInteger(page) && page >= 1 ? page : 1;
 }
 
-/**
- * @param {string} activeFilter
- * @param {string | null} value
- * @returns {PersistedUiState['category']}
- */
-function parseCategory(activeFilter, value) {
+function parseCategory(
+  activeFilter: string,
+  value: string | null,
+): PersistedUiState['category'] {
   const name = (value ?? '').trim();
 
   if (!name) return null;
 
   return {
     name,
-    filter: FILTER_PARAM[activeFilter] ?? DEFAULT_FILTER_PARAM,
+    filter: FILTER_PARAM[activeFilter as FilterType] ?? DEFAULT_FILTER_PARAM,
   };
 }
 
-/**
- * @returns {PersistedUiState | null}
- */
-export function readUiStateFromUrl() {
+export function readUiStateFromUrl(): PersistedUiState | null {
   if (!canUseUrl()) return null;
 
   const params = new URLSearchParams(window.location.search);
@@ -88,30 +68,22 @@ export function readUiStateFromUrl() {
   };
 }
 
-/**
- * @param {unknown} value
- * @returns {value is PersistedUiState}
- */
-function isPersistedUiState(value) {
+function isPersistedUiState(value: unknown): value is PersistedUiState {
   return !!value && typeof value === 'object';
 }
 
-/**
- * @param {unknown} value
- */
-export function writeUiStateToUrl(value) {
+export function writeUiStateToUrl(value: unknown): void {
   if (!canUseUrl() || !isPersistedUiState(value)) return;
 
-  const state = /** @type {Partial<PersistedUiState>} */ (value);
   const url = new URL(window.location.href);
   const filterParam =
-    FILTER_PARAM[state.activeFilter ?? DEFAULT_FILTER] ?? DEFAULT_FILTER_PARAM;
-  const page = state.page ?? 1;
-  const category = state.category?.name ?? '';
-  const keyword = state.keyword ?? '';
+    FILTER_PARAM[(value.activeFilter ?? DEFAULT_FILTER) as FilterType] ??
+    DEFAULT_FILTER_PARAM;
+  const page = value.page ?? 1;
+  const category = value.category?.name ?? '';
+  const keyword = value.keyword ?? '';
 
   url.searchParams.set(URL_PARAM.FILTER, filterParam);
-
   url.searchParams.set(URL_PARAM.PAGE, String(Math.max(1, page)));
 
   if (category) {
@@ -134,17 +106,15 @@ export function writeUiStateToUrl(value) {
   }
 }
 
-/**
- * @param {(state: PersistedUiState) => void} callback
- * @returns {() => void}
- */
-export function listenUiStateUrlChanges(callback) {
+export function listenUiStateUrlChanges(
+  callback: (state: PersistedUiState) => void,
+): () => void {
   if (!canUseUrl()) return () => {};
 
   const onPopState = () => {
-    const state = readUiStateFromUrl();
+    const urlState = readUiStateFromUrl();
 
-    if (state) callback(state);
+    if (urlState) callback(urlState);
   };
 
   window.addEventListener('popstate', onPopState);

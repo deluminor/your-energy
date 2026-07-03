@@ -1,28 +1,18 @@
-import { STORAGE_KEYS } from '../utils/constants.js';
-import { readUiStateFromUrl, writeUiStateToUrl } from './url-state.service.js';
+import { STORAGE_KEYS } from '@/constants/storage-keys.ts';
+import { readUiStateFromUrl, writeUiStateToUrl } from './url-state.service.ts';
 
-/**
- * @param {string} key
- * @param {unknown} value
- */
-function writeLocalJSON(key, value) {
+function writeLocalJSON(key: string, value: unknown): void {
   localStorage.setItem(key, JSON.stringify(value));
 }
 
-/**
- * @template T
- * @param {string} key
- * @param {T} fallback
- * @returns {T}
- */
-export function readJSON(key, fallback) {
+export function readJSON<T>(key: string, fallback: T): T {
   try {
     if (key === STORAGE_KEYS.UI_STATE) {
       const urlState = readUiStateFromUrl();
 
       if (urlState) {
         writeLocalJSON(key, urlState);
-        return /** @type {T} */ (urlState);
+        return urlState as T;
       }
     }
 
@@ -30,7 +20,7 @@ export function readJSON(key, fallback) {
 
     if (raw === null) return fallback;
 
-    const value = JSON.parse(raw);
+    const value = JSON.parse(raw) as T;
 
     if (key === STORAGE_KEYS.UI_STATE) {
       writeUiStateToUrl(value);
@@ -43,11 +33,7 @@ export function readJSON(key, fallback) {
   }
 }
 
-/**
- * @param {string} key
- * @param {unknown} value
- */
-export function writeJSON(key, value) {
+export function writeJSON(key: string, value: unknown): void {
   try {
     writeLocalJSON(key, value);
 
