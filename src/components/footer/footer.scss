@@ -177,27 +177,24 @@
   }
 
   &__bottom {
-    display: grid;
-    grid-template-columns: 1fr auto;
-    grid-template-areas:
-      'copyright copyright'
-      'policy year';
-    row-gap: rem(10);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: rem(10);
 
     margin-top: auto;
-    padding-right: rem(52);
 
     font-size: rem(14);
     line-height: 1.29;
   }
 
   &__copyright {
-    grid-area: copyright;
+    flex: 1 1 100%;
     margin: 0;
   }
 
   &__policy {
-    grid-area: policy;
     display: flex;
     gap: rem(8);
   }
@@ -208,11 +205,8 @@
   }
 
   &__year {
-    grid-area: year;
-    justify-self: end;
     margin: 0;
     white-space: nowrap;
-    transform: none;
   }
 
   @include respond($bp-tablet) {
@@ -274,34 +268,13 @@
     }
 
     &__bottom {
-      display: grid;
-      grid-template-columns: max-content max-content max-content;
-      grid-template-areas: 'copyright policy year';
-      align-items: center;
-      justify-content: space-between;
-      row-gap: 0;
-
+      flex-wrap: nowrap;
       margin-top: rem(64);
-
-      font-size: rem(14);
-      line-height: 1.29;
     }
 
     &__copyright {
-      width: auto;
-      margin: 0;
+      flex: 0 1 auto;
       white-space: nowrap;
-    }
-
-    &__policy {
-      justify-self: center;
-    }
-
-    &__year {
-      margin: 0;
-      justify-self: end;
-      white-space: nowrap;
-      transform: none;
     }
   }
 
@@ -344,35 +317,6 @@
       width: rem(352);
       max-width: rem(352);
       justify-self: end;
-    }
-
-    &__bottom {
-      display: grid;
-      grid-template-columns: rem(132) minmax(0, 1fr) rem(352);
-      grid-template-areas: 'copyright policy year';
-      justify-content: space-between;
-      align-items: center;
-      column-gap: rem(32);
-    }
-
-    &__copyright {
-      grid-area: copyright;
-      width: auto;
-      margin: 0;
-      white-space: nowrap;
-    }
-
-    &__policy {
-      grid-area: policy;
-      margin: 0;
-      justify-self: center;
-    }
-
-    &__year {
-      grid-area: year;
-      margin: 0;
-      justify-self: end;
-      transform: none;
     }
   }
 }
