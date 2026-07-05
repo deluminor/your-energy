@@ -81,16 +81,9 @@ const description = 'Your favorite exercises from the GoFit catalog.';
       width: 100%;
 
       :global(.quote) {
-        height: 100%;
-      }
-
-      @include respond($bp-tablet) {
-        @media (max-width: #{$bp-desktop - 1px}) {
-          :global(.quote) {
-            min-height: 249px;
-            justify-content: space-between;
-          }
-        }
+        height: auto;
+        min-height: unset;
+        justify-content: flex-start;
       }
     }
 
