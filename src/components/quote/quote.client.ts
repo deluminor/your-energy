@@ -46,11 +46,14 @@ function renderQuote(root: HTMLElement, quote: string, author: string): void {
   authorEl.textContent = author;
 }
 
+function cacheQuote(today: string, quote: string, author: string): void {
+  writeJSON(STORAGE_KEYS.QUOTE, { date: today, quote, author });
+}
+
 export async function initQuote(root: HTMLElement | null): Promise<void> {
   if (!root) return;
 
   const today = getTodayKey();
-  const ssrQuote = readSsrQuote(root);
   const cached = readJSON<CachedQuote | null>(STORAGE_KEYS.QUOTE, null);
 
   if (cached?.date === today) {
@@ -58,23 +61,17 @@ export async function initQuote(root: HTMLElement | null): Promise<void> {
     return;
   }
 
-  if (ssrQuote) {
-    writeJSON(STORAGE_KEYS.QUOTE, {
-      date: today,
-      quote: ssrQuote.quote,
-      author: ssrQuote.author,
-    });
+  const data = await getQuote({ loader: LOADER.SILENT }).catch(() => null);
+
+  if (data) {
+    renderQuote(root, data.quote, data.author);
+    cacheQuote(today, data.quote, data.author);
     return;
   }
 
-  const data = await getQuote({ loader: LOADER.SILENT }).catch(() => null);
+  const ssrQuote = readSsrQuote(root);
 
-  if (!data) return;
-
-  renderQuote(root, data.quote, data.author);
-  writeJSON(STORAGE_KEYS.QUOTE, {
-    date: today,
-    quote: data.quote,
-    author: data.author,
-  });
+  if (ssrQuote) {
+    cacheQuote(today, ssrQuote.quote, ssrQuote.author);
+  }
 }

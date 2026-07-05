@@ -49,13 +49,8 @@ describe('initQuote', () => {
     );
   });
 
-  it('fetches and caches quote when cache is missing and SSR is empty', async () => {
+  it('fetches and caches quote when cache is missing', async () => {
     const today = new Date().toISOString().slice(0, 10);
-
-    root.innerHTML = `
-      <p data-quote-text></p>
-      <p data-quote-author></p>
-    `;
 
     vi.mocked(readJSON).mockReturnValue(null);
     vi.mocked(getQuote).mockResolvedValue({
@@ -76,7 +71,7 @@ describe('initQuote', () => {
     );
   });
 
-  it('seeds cache from SSR quote instead of fetching when cache is stale', async () => {
+  it('fetches fresh quote when cache date is stale', async () => {
     const today = new Date().toISOString().slice(0, 10);
 
     vi.mocked(readJSON).mockReturnValue({
@@ -84,10 +79,37 @@ describe('initQuote', () => {
       quote: 'Old quote',
       author: 'Old author',
     });
+    vi.mocked(getQuote).mockResolvedValue({
+      quote: 'Fresh quote',
+      author: 'Fresh author',
+    });
 
     await initQuote(root);
 
-    expect(getQuote).not.toHaveBeenCalled();
+    expect(getQuote).toHaveBeenCalledOnce();
+    expect(writeJSON).toHaveBeenCalledWith(STORAGE_KEYS.QUOTE, {
+      date: today,
+      quote: 'Fresh quote',
+      author: 'Fresh author',
+    });
+    expect(root.querySelector('[data-quote-text]')?.textContent).toBe(
+      'Fresh quote',
+    );
+  });
+
+  it('falls back to SSR quote when cache is stale and API fails', async () => {
+    const today = new Date().toISOString().slice(0, 10);
+
+    vi.mocked(readJSON).mockReturnValue({
+      date: '2000-01-01',
+      quote: 'Old quote',
+      author: 'Old author',
+    });
+    vi.mocked(getQuote).mockRejectedValue(new Error('Network error'));
+
+    await initQuote(root);
+
+    expect(getQuote).toHaveBeenCalledOnce();
     expect(writeJSON).toHaveBeenCalledWith(STORAGE_KEYS.QUOTE, {
       date: today,
       quote: 'SSR quote',

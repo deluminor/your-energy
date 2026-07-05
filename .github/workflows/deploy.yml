@@ -4,6 +4,8 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+  schedule:
+    - cron: '0 3 * * *'
 
 # Allow the GITHUB_TOKEN to deploy to GitHub Pages.
 permissions:
